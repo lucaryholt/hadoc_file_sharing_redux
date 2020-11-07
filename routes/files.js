@@ -13,49 +13,77 @@ const request = require('request');
 const repo = require('../repo/Repo.js');
 const settings = require('../settings.json');
 
-router.get('/files/:id', (req, res) => {
+router.get('/uploads/:id', (req, res) => {
     repo.find('uploads', { id: req.params.id })
         .then(result => {
-            request({
-                url: settings.fileServerLink + '/file/' + result[0].filename
-            }, (error, response, body) => {
-                const data = new Uint8Array(JSON.parse(response.body).file.data);
-
-                fs.writeFileSync(path.join(__dirname, '../temp', result[0].originalFilename), data);
-                res.download(path.join(__dirname, '../temp', result[0].originalFilename), (error) => {
-                    if (!error) {
-                        fs.unlinkSync(path.join(__dirname, '../temp', result[0].originalFilename));
-                    }
-                });
-            });
+            return res.send(result[0]);
         });
 });
 
-router.post('/files', upload.single('file'), (req, res) => {
+router.get('/uploads/download/:id/:filename', (req, res) => {
+    repo.find('uploads', { id: req.params.id })
+        .then(result => {
+            const file = result[0].files.find(file => file.originalName === req.params.filename);
+            if (file !== undefined) {
+                request({
+                    url: settings.fileServerLink + '/file/' + file.filename
+                }, (error, response, body) => {
+                    const data = new Uint8Array(JSON.parse(response.body).file.data);
+
+                    fs.writeFileSync(path.join(__dirname, '../temp', file.originalName), data);
+                    res.download(path.join(__dirname, '../temp', file.originalName), (error) => {
+                        if (!error) {
+                            fs.unlinkSync(path.join(__dirname, '../temp', file.originalName));
+                        }
+                    });
+                });
+            } else {
+                return res.sendStatus(404);
+            }
+        });
+});
+
+router.post('/uploads', upload.array('files'), (req, res) => {
     const id = uuid.v4();
-    const file = {
+
+    const fileObject = {
         id,
-        originalFilename: req.file.originalname,
         uploadTime: new Date().getTime(),
-        message: req.body.message
+        message: req.body.message,
+        files: []
     }
 
+    let filesReadStreams = []
+
+    req.files.map(file => {
+        filesReadStreams.push(fs.createReadStream(path.join(__dirname, '../temp', file.filename)));
+    });
+
     request.post({
-        url: settings.fileServerLink + '/file',
+        url: settings.fileServerLink + '/files',
         formData: {
-            file: fs.createReadStream(path.join(__dirname, '../temp', req.file.filename)),
-            filetype: req.file.mimetype,
+            files: filesReadStreams,
+            filetype: 'file.mimetype',
             filename: 'file'
         }
     }, (error, response, body) => {
-        fs.unlinkSync(path.join(__dirname, '../temp', req.file.filename));
-        const responseBody = JSON.parse(response.body);
+        const files = JSON.parse(response.body).files;
 
-        file.filename = responseBody.filename;
-        file.encoding = responseBody.encoding;
-        file.mimetype = responseBody.mimetype;
+        req.files.map(file => {
+            fs.unlinkSync(path.join(__dirname, '../temp', file.filename));
+            files.map(file0 => {
+                if (file.filename === file0.originalName) {
+                    fileObject.files.push({
+                        filename: file0.filename,
+                        originalName: file.originalname,
+                        encoding: file.encoding,
+                        mimetype: file.mimetype
+                    });
+                }
+            });
+        });
 
-        repo.insert('uploads', file)
+        repo.insert('uploads', fileObject)
             .then(result => {
                 return res.send({ id });
             });

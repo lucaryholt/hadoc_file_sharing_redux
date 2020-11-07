@@ -2,7 +2,7 @@ function validateForm(){
     const form = document.getElementById('myForm');
     const formData = new FormData(form);
 
-    fetch('/files', {
+    fetch('/uploads', {
         method: 'POST',
         body: formData
     })
