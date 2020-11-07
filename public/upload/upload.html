@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hadoc - Upload</title>
+
+    <link rel="stylesheet" href="./upload/upload.css">
+</head>
+<body>
+
+<form id="myForm" class="input-group-vertical">
+    <div class="row">
+        <div class="col">
+            <div class="input-header">Message to receiver:</div>
+            <textarea name="message" class="form-control" id="message-input" cols="30" rows="10"></textarea>
+            <div class="input-header">Files:</div>
+            <input id="file-input" type="file" name="file">
+        </div>
+        <div class="col">
+            <a id="done-button" onclick="validateForm()" class="btn btn-primary btn-block">Done</a>
+        </div>
+    </div>
+</form>
+
+<script src="./upload/upload.js"></script>
+</body>
+</html>

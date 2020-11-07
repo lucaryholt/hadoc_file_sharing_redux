@@ -1,0 +1,27 @@
+{
+  "name": "hadoc_file_sharing_redux",
+  "version": "0.0.1",
+  "description": "New and Improved Hadoc File Sharing",
+  "main": "app.js",
+  "scripts": {
+    "start-dev": "cross-env PORT=8089 nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucaryholt/hadoc_file_sharing_redux.git"
+  },
+  "author": "L.Ryholt",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lucaryholt/hadoc_file_sharing_redux/issues"
+  },
+  "homepage": "https://github.com/lucaryholt/hadoc_file_sharing_redux#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "multer": "^1.4.2",
+    "cross-env": "^7.0.2",
+    "request": "^2.88.2",
+    "mongodb": "^3.6.3",
+    "uuid": "^8.3.1"
+  }
+}
