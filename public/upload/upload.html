@@ -4,24 +4,40 @@
     <meta charset="UTF-8">
     <title>Hadoc - Upload</title>
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="./upload/upload.css">
 </head>
 <body>
+<nav id="navbar" class="navbar navbar-expand-lg bg-dark">
+    <a id="site-logo" class="navbar-brand" href="/">
+        <img src="../images/hadoc.png" width="30" height="30" alt="Logo">
+        Hadoc
+    </a>
+</nav>
+<div class="container">
+    <h1 class="center">Hadoc File Sharing</h1>
 
-<form id="myForm" class="input-group-vertical">
-    <div class="row">
-        <div class="col">
-            <div class="input-header">Message to receiver:</div>
-            <textarea name="message" class="form-control" id="message-input" cols="30" rows="10"></textarea>
-            <div class="input-header">Files:</div>
-            <input id="file-input" type="file" name="files" multiple>
-        </div>
-        <div class="col">
-            <a id="done-button" onclick="validateForm()" class="btn btn-primary btn-block">Done</a>
-        </div>
-    </div>
-</form>
+    <h5 class="center">Upload files below and share them along with a message</h5>
 
+    <form id="myForm" class="input-group-vertical">
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <div class="input-header">Message to receiver:</div>
+                <textarea name="message" class="form-control" id="message-input" cols="30" rows="10"></textarea>
+                <div class="input-header">Files:</div>
+                <input id="file-input" type="file" name="files" multiple>
+
+                <a id="done-button" onclick="validateForm()" class="btn btn-primary btn-block">Upload</a>
+            </div>
+            <div class="col-3"></div>
+        </div>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
 <script src="./upload/upload.js"></script>
 </body>
 </html>

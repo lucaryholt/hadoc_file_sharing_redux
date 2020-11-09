@@ -8,7 +8,6 @@ function validateForm(){
     })
         .then(response => response.json())
         .then(result => {
-            console.log(result);
-            //window.location.href = '/download/' + result.downloadID;
+            window.location.href = '/download/' + result.id;
         });
 }

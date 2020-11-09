@@ -31,41 +31,41 @@ function authenticateFileServer() {
 }
 
 router.get('/uploads/:id', (req, res) => {
-    if (req.query.filename !== undefined) {
-        repo.find('uploads', { id: req.params.id })
-            .then(result => {
-                const file = result[0].files.find(file => file.originalName === req.query.filename);
-                if (file !== undefined) {
-                    request({
-                        url: process.env.FILE_SERVER_URL + '/file/' + file.filename,
-                        headers: {
-                            'Authorization': 'Bearer ' + accessToken
-                        }
-                    }, (error, response, body) => {
-                        if (response.statusCode === 403 || response.statusCode === 401) {
-                            authenticateFileServer();
-                            return res.send({ error: 'Error authenticating, try again.' })
-                        } else {
-                            const data = new Uint8Array(JSON.parse(response.body).file.data);
+    repo.find('uploads', { id: req.params.id })
+        .then(result => {
+            return res.send(result[0]);
+        });
+});
 
-                            fs.writeFileSync(path.join(__dirname, '../temp', file.originalName), data);
-                            res.download(path.join(__dirname, '../temp', file.originalName), (error) => {
-                                if (!error) {
-                                    fs.unlinkSync(path.join(__dirname, '../temp', file.originalName));
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    return res.sendStatus(404);
-                }
-            });
-    } else {
-        repo.find('uploads', { id: req.params.id })
-            .then(result => {
-                return res.send(result[0]);
-            });
-    }
+router.get('/uploads/:id/:filename', (req, res) => {
+    repo.find('uploads', { id: req.params.id })
+        .then(result => {
+            const file = result[0].files.find(file => file.originalName === req.params.filename);
+            if (file !== undefined) {
+                request({
+                    url: process.env.FILE_SERVER_URL + '/file/' + file.filename,
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                }, (error, response, body) => {
+                    if (response.statusCode === 403 || response.statusCode === 401) {
+                        authenticateFileServer();
+                        return res.send({ error: 'Error authenticating, try again.' })
+                    } else {
+                        const data = new Uint8Array(JSON.parse(response.body).file.data);
+
+                        fs.writeFileSync(path.join(__dirname, '../temp', file.originalName), data);
+                        res.download(path.join(__dirname, '../temp', file.originalName), (error) => {
+                            if (!error) {
+                                fs.unlinkSync(path.join(__dirname, '../temp', file.originalName));
+                            }
+                        });
+                    }
+                });
+            } else {
+                return res.sendStatus(404);
+            }
+        });
 });
 
 router.post('/uploads', upload.array('files'), (req, res) => {
