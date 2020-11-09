@@ -1,10 +1,8 @@
 const MongoDB = require('mongodb');
 
-const credentials = require('./credentials.json');
-
 const insertPromise = async function (collectionName, data) {
     return new Promise((resolve, reject) => {
-        MongoDB.connect(credentials.connectionString, { useUnifiedTopology: true }, (error, client) => {
+        MongoDB.connect(process.env.DB_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
             if (error) throw new Error();
 
             const db = client.db('hadoc_redux');
@@ -25,7 +23,7 @@ const insertPromise = async function (collectionName, data) {
 
 const findPromise = async function (collectionName, query) {
     return new Promise((resolve, reject) => {
-        MongoDB.connect(credentials.connectionString, { useUnifiedTopology: true }, (error, client) => {
+        MongoDB.connect(process.env.DB_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
             if (error) throw new Error();
 
             const db = client.db('hadoc_redux');
@@ -46,7 +44,7 @@ const findPromise = async function (collectionName, query) {
 
 const updatePromise = async function (collectionName, query, data) {
     return new Promise((resolve, reject) => {
-        MongoDB.connect(credentials.connectionString, { useUnifiedTopology: true }, (error, client) => {
+        MongoDB.connect(process.env.DB_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
             if (error) throw new Error();
 
             const db = client.db('hadoc_redux');
