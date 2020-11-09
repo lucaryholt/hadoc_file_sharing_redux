@@ -2,10 +2,10 @@ const MongoDB = require('mongodb');
 
 const insertPromise = async function (collectionName, data) {
     return new Promise((resolve, reject) => {
-        MongoDB.connect(process.env.DB_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
+        MongoDB.connect(process.env.DB_SERVER_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
             if (error) throw new Error();
 
-            const db = client.db('hadoc_redux');
+            const db = client.db(process.env.DB_NAME);
             const collection = db.collection(collectionName);
 
             collection.insertOne(data, (error, result) => {
@@ -23,10 +23,10 @@ const insertPromise = async function (collectionName, data) {
 
 const findPromise = async function (collectionName, query) {
     return new Promise((resolve, reject) => {
-        MongoDB.connect(process.env.DB_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
+        MongoDB.connect(process.env.DB_SERVER_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
             if (error) throw new Error();
 
-            const db = client.db('hadoc_redux');
+            const db = client.db(process.env.DB_NAME);
             const collection = db.collection(collectionName);
 
             collection.find(query).toArray((error, result) => {
@@ -44,10 +44,10 @@ const findPromise = async function (collectionName, query) {
 
 const updatePromise = async function (collectionName, query, data) {
     return new Promise((resolve, reject) => {
-        MongoDB.connect(process.env.DB_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
+        MongoDB.connect(process.env.DB_SERVER_CONNECTION_STRING, { useUnifiedTopology: true }, (error, client) => {
             if (error) throw new Error();
 
-            const db = client.db('hadoc_redux');
+            const db = client.db(process.env.DB_NAME);
             const collection = db.collection(collectionName);
 
             collection.updateOne(query, { $set: data }, (error, result) => {

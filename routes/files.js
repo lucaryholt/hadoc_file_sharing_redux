@@ -18,7 +18,7 @@ authenticateFileServer();
 
 function authenticateFileServer() {
     request.post({
-        url: process.env.FILE_SERVER_LINK + '/authenticate',
+        url: process.env.FILE_SERVER_URL + '/authenticate',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -37,7 +37,7 @@ router.get('/uploads/:id', (req, res) => {
                 const file = result[0].files.find(file => file.originalName === req.query.filename);
                 if (file !== undefined) {
                     request({
-                        url: process.env.FILE_SERVER_LINK + '/file/' + file.filename,
+                        url: process.env.FILE_SERVER_URL + '/file/' + file.filename,
                         headers: {
                             'Authorization': 'Bearer ' + accessToken
                         }
@@ -85,7 +85,7 @@ router.post('/uploads', upload.array('files'), (req, res) => {
     });
 
     request.post({
-        url: process.env.FILE_SERVER_LINK + '/files',
+        url: process.env.FILE_SERVER_URL + '/files',
         formData: {
             files: filesReadStreams,
             filetype: 'file.mimetype', // maybe don't need filetype & filename
