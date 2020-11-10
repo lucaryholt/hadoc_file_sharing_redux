@@ -5,7 +5,7 @@ const app = express();
 
 app.use(express.static('public'));
 
-app.use(require('./routes/html.js'));
+app.use(require('./routes/pages.js'));
 
 app.use(require('./routes/files.js'));
 
