@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./repo/timeout.js')();
 
 const express = require('express');
 const app = express();

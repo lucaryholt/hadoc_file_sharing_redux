@@ -27,7 +27,8 @@ router.post('/login', async (req, res) => {
                const refreshToken = jwt.sign({ name: user.username }, process.env.REFRESH_TOKEN_SECRET);
 
                const response = await repo.insert('refreshTokens', {
-                    refreshToken
+                    refreshToken,
+                    authTime: new Date().getTime()
                });
 
                if (response === undefined) return res.status(500).send({ message: 'Error with database communication. Try again.' });

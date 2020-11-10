@@ -27,6 +27,7 @@ function authenticateFileServer() {
         })
     }, (error, response, body) => {
         accessToken = JSON.parse(response.body).accessToken;
+        process.env.FILE_SERVER_ACCESSTOKEN = JSON.parse(response.body).accessToken;
     });
 }
 
