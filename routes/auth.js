@@ -10,22 +10,8 @@ const jwt = require('jsonwebtoken');
 router.use(express.json());
 
 function generateAccessToken(user) {
-     return jwt.sign({ name: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30s' });
+     return jwt.sign({ name: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
 }
-
-router.get('/logout', (req, res) => {
-     try {
-          const token = req.body.token;
-
-          const response = repo.deleteOne('refreshTokens', { refreshToken: token });
-
-          if (response === undefined) return res.status(500).send({ message: 'Error with database communication. Try again.' });
-
-          return res.status(200).send({ message: 'Logout complete.' });
-     } catch (e) {
-          return res.status(500).send({ message: 'Internal Server Error.' });
-     }
-});
 
 router.post('/login', async (req, res) => {
      try {
@@ -38,7 +24,7 @@ router.post('/login', async (req, res) => {
 
           if (await bcrypt.compare(req.body.password, user.password)) {
                const accessToken = generateAccessToken(user);
-               const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '8h' });
+               const refreshToken = jwt.sign({ name: user.username }, process.env.REFRESH_TOKEN_SECRET);
 
                const response = await repo.insert('refreshTokens', {
                     refreshToken
@@ -49,7 +35,8 @@ router.post('/login', async (req, res) => {
                return res.status(200).send({
                     message: 'Log in complete.',
                     accessToken,
-                    refreshToken });
+                    refreshToken
+               });
           } else {
                return res.status(401).send({ message: 'Wrong password.' });
           }
@@ -95,6 +82,20 @@ router.post('/register', async (req, res) => {
           });
 
           return res.status(201).send({ message: 'User ' + req.body.username + ' created.' });
+     } catch (e) {
+          return res.status(500).send({ message: 'Internal Server Error.' });
+     }
+});
+
+router.delete('/logout', (req, res) => {
+     try {
+          const token = req.body.token;
+
+          const response = repo.deleteOne('refreshTokens', { refreshToken: token });
+
+          if (response === undefined) return res.status(500).send({ message: 'Error with database communication. Try again.' });
+
+          return res.status(200).send({ message: 'Logout complete.' });
      } catch (e) {
           return res.status(500).send({ message: 'Internal Server Error.' });
      }
