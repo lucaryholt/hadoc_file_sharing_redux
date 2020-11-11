@@ -1,3 +1,18 @@
+body {
+    background: #303F9F;
+    margin: 0;
+    color: ghostwhite;
+}
+
+.container {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
 .center {
     margin: auto;
     width: max-content;
@@ -6,4 +21,37 @@
 
 #pop-up-alert {
     margin-bottom: 0;
+}
+
+html {
+    font-family: 'Roboto', sans-serif;
+    height: 100%;
+}
+
+#title {
+    font-family: 'Reem Kufi', sans-serif;
+    font-size: 3.75em;
+    font-weight: 600;
+}
+
+#sub-title {
+    font-size: 1.5rem;
+    font-weight: 100;
+}
+
+#site-logo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+}
+
+#site-logo img {
+    max-height: 50px;
+    max-width: 50px;
+}
+
+.top-right-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
 }

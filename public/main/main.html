@@ -12,14 +12,14 @@
 </head>
 <body>
 <!-- Navbar -->
-<nav id="navbar" class="navbar navbar-expand-lg bg-dark">
-    <a id="site-logo" class="navbar-brand" onclick="showPage('')">
-        <img src="../images/hadoc.png" width="30" height="30" alt="Logo">
-        Hadoc
-    </a>
-    <button id="login-button" class="btn btn-primary" type="button" data-toggle="modal" data-target="#login-modal">Login</button>
-    <button id="logout-button" class="btn btn-warning" type="button" onclick="logout()">Logout</button>
-</nav>
+<!--<nav id="navbar" class="navbar navbar-expand-lg bg-dark">
+
+</nav>-->
+<button id="login-button" class="btn btn-outline-primary top-right-button" type="button" data-toggle="modal" data-target="#login-modal">Login</button>
+<button id="logout-button" class="btn btn-warning top-right-button" type="button" onclick="logout()">Logout</button>
+<a id="site-logo" class="navbar-brand" onclick="showPage('')">
+    <img src="../images/hadoc.png" alt="Logo">
+</a>
 <div id="pop-up-alert-hook" class="center"></div>
 
 <!-- Where page html is injected -->
@@ -29,12 +29,6 @@
 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="login-modal-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="login-modal-label">Login</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
             <div class="modal-body">
                 <div id="alert-hook"></div>
                 <form onsubmit="login(); return false;">
@@ -44,9 +38,6 @@
                         <button type="submit" class="btn btn-block btn-primary">Login</button>
                     </div>
                 </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

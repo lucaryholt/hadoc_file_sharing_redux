@@ -1,22 +1,16 @@
-<h1 class="center">Hadoc File Sharing</h1>
+<h1 id="title" class="center">Hadoc File Sharing</h1>
 
-<h5 class="center">Upload files below and share them along with a message</h5>
+<h5 id="sub-title" class="center">Upload files below and share them along with a message</h5>
 
 <form id="my-form" class="input-group-vertical" onsubmit="validateForm(); return false;">
-    <div class="row">
-        <div class="col-3"></div>
-        <div class="col-6">
-            <div class="input-header">Message to receiver:</div>
-            <textarea name="message" class="form-control" id="message-input" cols="30" rows="10"></textarea>
-            <div class="input-header">Email for receiver (optional):</div>
-            <input name="receiver" class="form-control" id="receiver-input">
-            <div class="input-header">Files:</div>
-            <input id="file-input" type="file" name="files" multiple>
+    <div class="input-header">Message to receiver:</div>
+    <textarea name="message" class="form-control" id="message-input" cols="30" rows="10"></textarea>
+    <div class="input-header">Email for receiver (optional):</div>
+    <input name="receiver" class="form-control" id="receiver-input">
+    <div class="input-header">Files:</div>
+    <input id="file-input" type="file" name="files" multiple>
 
-            <button id="done-button" type="submit" class="btn btn-primary btn-block">Upload</button>
-        </div>
-        <div class="col-3"></div>
-    </div>
+    <button id="done-button" type="submit" class="btn btn-primary btn-block">Upload</button>
 </form>
 
 <script src="../upload/upload.js"></script>
