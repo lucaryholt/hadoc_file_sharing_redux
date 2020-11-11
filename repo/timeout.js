@@ -1,5 +1,9 @@
 const repo = require('./Repo.js');
 const request = require('request');
+const fs = require('fs');
+const path = require('path');
+
+const timeoutLogStream = fs.createWriteStream(path.join(__dirname, '../timeout.log'), { flags: 'a' });
 
 function timeoutUploads() {
     repo.find('uploads', {})
@@ -21,7 +25,7 @@ function timeoutUploads() {
                 });
                 repo.deleteOne('uploads', { id: upload.id })
                     .then(result => {
-                        // TODO log this
+                        log(result, upload);
                     });
             });
         });
@@ -39,13 +43,19 @@ function timeoutRefreshTokens() {
             tokensTimedout.map(token => {
                 repo.deleteOne('refreshTokens', { refreshToken: token.refreshToken })
                     .then(result => {
-                        // TODO log this
+                        console.log(result, token);
                     });
             });
         });
 }
 
+function log(result, object) {
+    timeoutLogStream.write(new Date().toUTCString() + '. Deleted ' + result.deletedCount + '. Deleted info:' + JSON.stringify(object) + '\n');
+}
+
 function startHandlers() {
+    timeoutUploads();
+    timeoutRefreshTokens();
     setInterval(timeoutUploads, 300000);
     setInterval(timeoutRefreshTokens, 300000);
 }

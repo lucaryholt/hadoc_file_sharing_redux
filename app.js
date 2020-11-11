@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 
 const morgan = require('morgan');
 
