@@ -6,6 +6,7 @@ const fs = require('fs');
 const uuid = require('uuid');
 const multer = require('multer');
 const repo = require('../repo/repo.js');
+const mailer = require('../mail/mailer.js');
 
 const upload = multer({
     dest: path.join(__dirname, '../temp')
@@ -108,6 +109,11 @@ router.post('/uploads', upload.array('files'), (req, res) => {
                     }
                 });
             });
+
+            if (req.body.receiver !== '') {
+                uploadInfoObject.receiver = req.body.receiver;
+                mailer.sendUploadEmail(req.body.receiver, req.body.message, id);
+            }
 
             repo.insert('uploads', uploadInfoObject)
                 .then(result => {
