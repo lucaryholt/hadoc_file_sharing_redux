@@ -35,7 +35,7 @@ function appendUpload(upload){
             '<div class="upload-item">' +
                 '<h5 class="upload-id">' + upload.id + '</h5>' +
                 '<p class="upload-message">' + upload.message + '</p>' +
-                '<p class="upload-time">' + upload.uploadTime + '</p>' +
+                '<p class="upload-time">' + new Date(Number(upload.uploadTime)).toUTCString() + '</p>' +
                 '<ul>' +
                     filesHtml +
                 '</ul>' +

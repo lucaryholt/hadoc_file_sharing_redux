@@ -2,7 +2,15 @@ require('dotenv').config();
 require('./repo/timeout.js')();
 
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const app = express();
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
+const morgan = require('morgan');
+
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.static('public'));
 

@@ -3,7 +3,7 @@ const logoutButton = $('#logout-button');
 
 fetch('/logintest', {
     headers: {
-        'authorization': sessionStorage.getItem('accessToken')
+        'authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
     }
 })
     .then(response => {
@@ -67,7 +67,7 @@ function logout() {
             status = response.status;
             response.json()
                 .then(result => {
-                    if (status === 500) console.log('Could not log out.'); // TODO better handling. Pop up on site or something.
+                    if (status === 500) popUpAlert('Could not log out, please try again.', 'warning');
                     else {
                         sessionStorage.removeItem('accessToken');
                         sessionStorage.removeItem('refreshToken');
@@ -103,7 +103,7 @@ function refreshToken(callback) {
                          sessionStorage.setItem('accessToken', result.accessToken);
                          callback();
                      }
-                 })
+                 });
         });
 }
 
@@ -117,5 +117,20 @@ function alert(message, intensity) {
             '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
                 '<span aria-hidden="true">&times;</span>' +
             '</button>' +
-        '</div>');
+        '</div>'
+    );
+}
+
+function popUpAlert(message, intensity) {
+    const hook = $('#pop-up-alert-hook');
+
+    hook.append(
+        '<div id="pop-up-alert" class="alert alert-' + intensity + '" role="alert">' +
+            message +
+        '</div>'
+    );
+
+    setTimeout(() => {
+        hook.html('');
+    }, 3000);
 }
