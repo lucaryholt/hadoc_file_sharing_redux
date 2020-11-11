@@ -47,7 +47,7 @@ function timeoutRefreshTokens() {
 
 function startHandlers() {
     setInterval(timeoutUploads, 300000);
-    setInterval(timeoutRefreshTokens, 28800000);
+    setInterval(timeoutRefreshTokens, 300000);
 }
 
 module.exports = startHandlers;
