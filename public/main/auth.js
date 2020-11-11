@@ -1,4 +1,4 @@
-const loginButton = $('#login-button');
+const loginButton = $('#auth-button');
 const logoutButton = $('#logout-button');
 
 fetch('/logintest', {
@@ -18,8 +18,6 @@ function login() {
     const username = document.getElementById('username-input').value;
     const password = document.getElementById('password-input').value;
 
-    let status = null;
-
     fetch('/login', {
         method: 'POST',
         headers: {
@@ -31,29 +29,25 @@ function login() {
         })
     })
         .then(response => {
-            status = response.status;
-
-            response.json()
-                .then(result => {
-                    if (status === 200) {
-                        alert(result.message, 'success');
+            if (response.status !== 200) loginAlert('Could not log in. Try again.', 'warning');
+            else {
+                response.json()
+                    .then(result => {
+                        loginAlert(result.message, 'success');
                         sessionStorage.setItem('accessToken', result.accessToken);
                         sessionStorage.setItem('refreshToken', result.refreshToken);
                         setTimeout(() => {
-                            $('#loginModal').modal('toggle');
+                            $('#login-modal').modal('toggle');
                             loginButton.hide();
                             logoutButton.show();
                             showPage('admin');
                         }, 1500);
-                    }
-                    else alert(result.message, 'warning');
-                });
+                    });
+            }
         });
 }
 
 function logout() {
-    let status = null;
-
     fetch('/logout', {
         method: 'DELETE',
         headers: {
@@ -64,18 +58,17 @@ function logout() {
         })
     })
         .then(response => {
-            status = response.status;
-            response.json()
-                .then(result => {
-                    if (status === 500) popUpAlert('Could not log out, please try again.', 'warning');
-                    else {
+            if (response.status === 500) popUpAlert('Could not log out, please try again.', 'warning');
+            else {
+                response.json()
+                    .then(result => {
                         sessionStorage.removeItem('accessToken');
                         sessionStorage.removeItem('refreshToken');
                         logoutButton.hide();
                         loginButton.show();
                         showPage('');
-                    }
-                });
+                    });
+            }
         });
 }
 
@@ -98,7 +91,7 @@ function refreshToken(callback) {
                      if (status === 403 || status === 401) {
                          showPage('');
                          $('#loginModal').modal('toggle');
-                         alert(result.message, 'warning');
+                         loginAlert(result.message, 'warning');
                      } else {
                          sessionStorage.setItem('accessToken', result.accessToken);
                          callback();
@@ -107,7 +100,7 @@ function refreshToken(callback) {
         });
 }
 
-function alert(message, intensity) {
+function loginAlert(message, intensity) {
     const hook = $('#alert-hook');
     hook.html('');
 

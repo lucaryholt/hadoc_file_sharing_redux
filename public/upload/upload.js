@@ -1,5 +1,5 @@
-function validateForm(){
-    const form = document.getElementById('myForm');
+function validateForm() {
+    const form = document.getElementById('my-form');
     const formData = new FormData(form);
 
     fetch('/uploads', {

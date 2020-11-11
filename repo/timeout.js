@@ -1,4 +1,4 @@
-const repo = require('./Repo.js');
+const repo = require('./repo.js');
 const request = require('request');
 const fs = require('fs');
 const path = require('path');

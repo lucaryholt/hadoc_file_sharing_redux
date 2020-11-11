@@ -1,13 +1,8 @@
-const express = require('express');
-const router = express.Router();
-
+const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
-const repo = require('../repo/Repo.js');
-
+const repo = require('../repo/repo.js');
 const jwt = require('jsonwebtoken');
-
-router.use(express.json());
 
 function generateAccessToken(user) {
      return jwt.sign({ name: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
@@ -48,12 +43,12 @@ router.post('/login', async (req, res) => {
 
 router.post('/token', async (req, res) => {
      const refreshToken = req.body.token;
-     if (refreshToken === null) return res.status(401).send({ message: 'Refresh token does not exist. Please log in.' });
+     if (refreshToken === null) return res.status(401).send({ message: 'Please log in.' });
 
      try {
           const response = await repo.find('refreshTokens', { refreshToken: refreshToken });
 
-          if (response === undefined) return res.status(500).send({ message: 'Error with database communication. Try again.' });
+          if (response === undefined) return res.status(403).send({ message: 'Could not authorize token. Please log in and try again.' });
 
           jwt.sign(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
                if (error) {
@@ -71,7 +66,7 @@ router.post('/token', async (req, res) => {
      }
 });
 
-router.post('/register', async (req, res) => {
+/*router.post('/register', async (req, res) => {
      try {
           const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -86,7 +81,7 @@ router.post('/register', async (req, res) => {
      } catch (e) {
           return res.status(500).send({ message: 'Internal Server Error.' });
      }
-});
+});*/
 
 router.delete('/logout', (req, res) => {
      try {

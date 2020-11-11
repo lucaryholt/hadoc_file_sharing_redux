@@ -1,10 +1,7 @@
-const express = require('express');
-const router = express.Router();
-
-const repo = require('../repo/Repo.js');
-
+const router = require('express').Router();
 const jwt = require('jsonwebtoken');
 const path = require('path');
+const repo = require('../repo/repo.js');
 
 function authenticateUser(req, res, next) {
     const authHeader = req.headers['authorization'];

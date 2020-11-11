@@ -49,6 +49,8 @@ const updatePromise = async function (collectionName, query, data) {
             collection.updateOne(query, { $set: data }, (error, result) => {
                 if (error) reject();
 
+                client.close();
+
                 resolve(result);
             });
         });
@@ -66,6 +68,8 @@ const deleteOnePromise = async function (collectionName, query) {
             collection.deleteOne(query, (error, result) => {
                 if (error) reject();
 
+                client.close();
+
                 resolve(result);
             });
         });
@@ -82,6 +86,8 @@ const deleteManyPromise = async function (collectionName, query) {
 
             collection.deleteMany(query, (error, result) => {
                 if (error) reject();
+
+                client.close();
 
                 resolve(result);
             });

@@ -4,15 +4,17 @@ require('./repo/timeout.js')();
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const morgan = require('morgan');
+
 const app = express();
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
-
-const morgan = require('morgan');
-
 app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.static('public'));
+app.use(express.json());
+
+// Routes
 
 app.use(require('./routes/pages.js'));
 

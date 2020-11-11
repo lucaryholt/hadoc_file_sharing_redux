@@ -2,7 +2,7 @@
 
 <h5 class="center">Upload files below and share them along with a message</h5>
 
-<form id="myForm" class="input-group-vertical">
+<form id="my-form" class="input-group-vertical" onsubmit="validateForm(); return false;">
     <div class="row">
         <div class="col-3"></div>
         <div class="col-6">
@@ -11,8 +11,10 @@
             <div class="input-header">Files:</div>
             <input id="file-input" type="file" name="files" multiple>
 
-            <a id="done-button" onclick="validateForm()" class="btn btn-primary btn-block">Upload</a>
+            <button id="done-button" type="submit" class="btn btn-primary btn-block">Upload</button>
         </div>
         <div class="col-3"></div>
     </div>
 </form>
+
+<script src="../upload/upload.js"></script>

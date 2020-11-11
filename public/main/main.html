@@ -4,45 +4,46 @@
     <meta charset="UTF-8">
     <title>Hadoc</title>
 
+    <!-- Cookie disclaimer, Bootstrap and project CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="../admin/admin.css">
-    <link rel="stylesheet" href="../download/download.css">
-    <!--<link rel="stylesheet" href="../global/global.css">-->
     <link rel="stylesheet" href="../main/main.css">
-    <link rel="stylesheet" href="../upload/upload.css">
 </head>
 <body>
+<!-- Navbar -->
 <nav id="navbar" class="navbar navbar-expand-lg bg-dark">
     <a id="site-logo" class="navbar-brand" onclick="showPage('')">
         <img src="../images/hadoc.png" width="30" height="30" alt="Logo">
         Hadoc
     </a>
-    <button id="login-button" class="btn btn-primary" type="button" data-toggle="modal" data-target="#loginModal">Login</button>
+    <button id="login-button" class="btn btn-primary" type="button" data-toggle="modal" data-target="#login-modal">Login</button>
     <button id="logout-button" class="btn btn-warning" type="button" onclick="logout()">Logout</button>
 </nav>
 <div id="pop-up-alert-hook" class="center"></div>
-<div class="container">
 
+<!-- Where page html is injected -->
+<div class="container"></div>
 
-</div>
-
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+<!-- Modal containing login form -->
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="login-modal-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                <h5 class="modal-title" id="login-modal-label">Login</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div id="alert-hook"></div>
-                <div class="form-group">
-                    <input type="text" id="username-input" placeholder="Username" class="form-control">
-                    <input type="password" id="password-input" placeholder="Password" class="form-control">
-                    <a type="button" onclick="login()" class="btn btn-block btn-primary">Login</a>
-                </div>
+                <form onsubmit="login(); return false;">
+                    <div class="form-group">
+                        <input type="text" id="username-input" placeholder="Username" class="form-control">
+                        <input type="password" id="password-input" placeholder="Password" class="form-control">
+                        <button type="submit" class="btn btn-block btn-primary">Login</button>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -51,14 +52,14 @@
     </div>
 </div>
 
+<!-- Import jQuery, Bootstrap JS, Fontawesome and project JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
 <script src="https://kit.fontawesome.com/af932a1361.js" crossorigin="anonymous"></script>
 <script src="../main/main.js"></script>
-<script src="../upload/upload.js"></script>
-<script src="../global/login.js"></script>
-<script src="../admin/admin.js"></script>
-<script src="../download/download.js"></script>
+<script src="../main/auth.js"></script>
+
+<!-- Cookie Disclaimer -->
 <script src="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.js" data-cfasync="false"></script>
 <script>
     window.cookieconsent.initialise({
