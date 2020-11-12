@@ -9,9 +9,13 @@ function getUploads() {
             else {
                 response.json()
                     .then(result => {
-                        result.map(upload => {
-                            appendUpload(upload);
-                        });
+                        if (result.length !== 0) {
+                            result.map(upload => {
+                                appendUpload(upload);
+                            });
+                        } else {
+                            $('#upload-list-hook').append('<h3>No uploads... Go upload some files!</h3>');
+                        }
                     });
             }
         });
