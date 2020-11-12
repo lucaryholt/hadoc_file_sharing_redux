@@ -5,7 +5,7 @@ const repo = require('../repo/repo.js');
 const jwt = require('jsonwebtoken');
 
 function generateAccessToken(user) {
-     return jwt.sign({ name: user.username }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
+     return jwt.sign({ name: user.username, roles: user.roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
 }
 
 router.post('/login', async (req, res) => {
@@ -19,7 +19,7 @@ router.post('/login', async (req, res) => {
 
           if (await bcrypt.compare(req.body.password, user.password)) {
                const accessToken = generateAccessToken(user);
-               const refreshToken = jwt.sign({ name: user.username }, process.env.REFRESH_TOKEN_SECRET);
+               const refreshToken = jwt.sign({ name: user.username, roles: user.roles }, process.env.REFRESH_TOKEN_SECRET);
 
                const response = await repo.insert('refreshTokens', {
                     refreshToken,
@@ -30,6 +30,7 @@ router.post('/login', async (req, res) => {
 
                return res.status(200).send({
                     message: 'Log in complete.',
+                    username: user.username,
                     accessToken,
                     refreshToken
                });
@@ -66,7 +67,7 @@ router.post('/token', async (req, res) => {
      }
 });
 
-/*router.post('/register', async (req, res) => {
+router.post('/register', async (req, res) => {
      try {
           const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
@@ -74,14 +75,14 @@ router.post('/token', async (req, res) => {
                id: uuid.v4().toString(),
                username: req.body.username,
                password: hashedPassword,
-               roles: ["admin"]
+               roles: ["user"]
           });
 
           return res.status(201).send({ message: 'User ' + req.body.username + ' created.' });
      } catch (e) {
           return res.status(500).send({ message: 'Internal Server Error.' });
      }
-});*/
+});
 
 router.delete('/logout', (req, res) => {
      try {

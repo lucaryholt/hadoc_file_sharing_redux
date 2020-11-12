@@ -1,5 +1,5 @@
-const loginButton = $('#auth-button');
-const logoutButton = $('#logout-button');
+const loggedOutButtons = $('#logged-out-buttons');
+const loggedInButtons = $('#logged-in-buttons');
 
 fetch('/logintest', {
     headers: {
@@ -8,9 +8,9 @@ fetch('/logintest', {
 })
     .then(response => {
         if (response.status === 401 || response.status === 403) {
-            logoutButton.hide();
+            loggedInButtons.hide();
         } else {
-            loginButton.hide();
+            loggedOutButtons.hide();
         }
     });
 
@@ -34,13 +34,13 @@ function login() {
                 response.json()
                     .then(result => {
                         loginAlert(result.message, 'success');
+                        sessionStorage.setItem('username', result.username);
                         sessionStorage.setItem('accessToken', result.accessToken);
                         sessionStorage.setItem('refreshToken', result.refreshToken);
                         setTimeout(() => {
                             $('#login-modal').modal('toggle');
-                            loginButton.hide();
-                            logoutButton.show();
-                            showPage('admin');
+                            loggedOutButtons.hide();
+                            loggedInButtons.show();
                         }, 1500);
                     });
             }
@@ -62,10 +62,11 @@ function logout() {
             else {
                 response.json()
                     .then(result => {
+                        sessionStorage.removeItem('username');
                         sessionStorage.removeItem('accessToken');
                         sessionStorage.removeItem('refreshToken');
-                        logoutButton.hide();
-                        loginButton.show();
+                        loggedInButtons.hide();
+                        loggedOutButtons.show();
                         showPage('');
                     });
             }
@@ -126,4 +127,29 @@ function popUpAlert(message, intensity) {
     setTimeout(() => {
         hook.html('');
     }, 3000);
+}
+
+function register() {
+    const username = document.getElementById('username-register-input').value;
+    const password = document.getElementById('password-register-input').value;
+
+    fetch('/register', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            username,
+            password
+        })
+    })
+        .then(response => {
+            if (response.status === 500) popUpAlert('Something went wrong. Try again.', 'warning');
+            else {
+                response.json()
+                    .then(result => {
+                        console.log(result);
+                    });
+            }
+        });
 }

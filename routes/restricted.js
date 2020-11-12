@@ -19,9 +19,13 @@ router.get('/logintest', authenticateUser, (req, res) => {
      return res.status(200).send({ message: 'Logged in.' });
 });
 
-router.get('/admin/uploads', authenticateUser, async (req, res) => {
+router.get('/restricted/uploads', authenticateUser, async (req, res) => {
     try {
-        const uploads = await repo.find('uploads', {});
+        let query = null;
+        if (req.user.roles.includes('admin')) query = {};
+        else query = { uploader: req.user.name };
+
+        const uploads = await repo.find('uploads', query);
 
         if (uploads === undefined) return res.sendStatus(500);
 

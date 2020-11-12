@@ -23,7 +23,7 @@ function showPage(page) {
                 container.html('');
                 container.append(result + '');
                 if (page === 'download') download();
-                if (page === 'admin') getUploads();
+                if (page === 'userpage') getUploads();
             }, 750);
         });
 }

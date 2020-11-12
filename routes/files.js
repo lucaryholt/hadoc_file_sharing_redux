@@ -79,6 +79,10 @@ router.post('/uploads', upload.array('files'), (req, res) => {
         files: []
     }
 
+    if (req.body.username !== 'null') {
+        uploadInfoObject.uploader = req.body.username;
+    }
+
     let uploadedFileDataArray = []
 
     req.files.map(file => {

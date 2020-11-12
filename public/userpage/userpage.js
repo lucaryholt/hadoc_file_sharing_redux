@@ -1,5 +1,5 @@
 function getUploads() {
-    fetch('/admin/uploads', {
+    fetch('/restricted/uploads', {
         headers: {
             'authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
         }

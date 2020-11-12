@@ -7,7 +7,7 @@
     <!-- Cookie disclaimer, Bootstrap and project CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/cookieconsent@3/build/cookieconsent.min.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="../admin/admin.css">
+    <link rel="stylesheet" href="../userpage/userpage.css">
     <link rel="stylesheet" href="../main/main.css">
 </head>
 <body>
@@ -15,8 +15,14 @@
 <!--<nav id="navbar" class="navbar navbar-expand-lg bg-dark">
 
 </nav>-->
-<button id="login-button" class="btn btn-outline-primary top-right-button" type="button" data-toggle="modal" data-target="#login-modal">Login</button>
-<button id="logout-button" class="btn btn-warning top-right-button" type="button" onclick="logout()">Logout</button>
+<div id="logged-out-buttons" class="top-right-button">
+    <button class="btn btn-outline-success" type="button" data-toggle="modal" data-target="#register-modal">Register</button>
+    <button class="btn btn-outline-primary" type="button" data-toggle="modal" data-target="#login-modal">Login</button>
+</div>
+<div id="logged-in-buttons" class="top-right-button">
+    <button class="btn btn-outline-primary" type="button" onclick="showPage('userpage');">User page</button>
+    <button id="logout-button" class="btn btn-outline-warning" type="button" onclick="logout()">Logout</button>
+</div>
 <a id="site-logo" class="navbar-brand" onclick="showPage('')">
     <img src="../images/hadoc.png" alt="Logo">
 </a>
@@ -33,9 +39,26 @@
                 <div id="alert-hook"></div>
                 <form onsubmit="login(); return false;">
                     <div class="form-group">
-                        <input type="text" id="username-input" placeholder="Username" class="form-control">
+                        <input type="text" id="username-input" placeholder="Email" class="form-control">
                         <input type="password" id="password-input" placeholder="Password" class="form-control">
                         <button type="submit" class="btn btn-block btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal containing register form -->
+<div class="modal fade" id="register-modal" tabindex="-1" role="dialog" aria-labelledby="register-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form onsubmit="register(); return false;">
+                    <div class="form-group">
+                        <input type="email" id="username-register-input" placeholder="Email" class="form-control" required>
+                        <input type="password" id="password-register-input" placeholder="Password" class="form-control" required>
+                        <button type="submit" class="btn btn-block btn-primary">Register</button>
                     </div>
                 </form>
             </div>
