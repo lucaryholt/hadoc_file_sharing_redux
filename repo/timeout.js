@@ -36,14 +36,14 @@ function timeoutRefreshTokens() {
         .then(result => {
             const timestamp = new Date().getTime();
             const tokensTimedout = result.filter(token => {
-                if ((timestamp - token.uploadTime) > Number(process.env.REFRESH_TOKEN_ACTIVE_TIME)) {
+                if ((timestamp - token.authTime) > Number(process.env.REFRESH_TOKEN_ACTIVE_TIME)) {
                     return token;
                 }
             });
             tokensTimedout.map(token => {
                 repo.deleteOne('refreshTokens', { refreshToken: token.refreshToken })
                     .then(result => {
-                        console.log(result, token);
+                        log(result, token);
                     });
             });
         });

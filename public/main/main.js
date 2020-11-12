@@ -12,10 +12,19 @@ function showPage(page) {
         .then(response => response.text())
         .then(result => {
             const container = $('.container');
-            container.html('');
-            container.append(result + '');
-            if (page === 'download') download();
-            if (page === 'admin') getUploads();
+
+            container.html(
+                '<div class="spinner-grow" role="status">' +
+                    '<span class="sr-only">Loading...</span>' +
+                '</div>'
+            );
+
+            setTimeout(() => {
+                container.html('');
+                container.append(result + '');
+                if (page === 'download') download();
+                if (page === 'admin') getUploads();
+            }, 750);
         });
 }
 

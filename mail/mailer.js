@@ -1,4 +1,10 @@
 const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
+
+const uploadMail0 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/shareMail/0.html')).toString();
+const uploadMail1 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/shareMail/1.html')).toString();
+const uploadMail2 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/shareMail/2.html')).toString();
 
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
@@ -24,15 +30,7 @@ function sendEmail(receiver, subject, messageText, messageHTML) {
 }
 
 function sendUploadEmail(receiver, uploadMessage, uploadId) {
-    const html =
-        '<h1>Hello</h1>' +
-        '<p>Someone has shared some files with you!</p>' +
-        '<p>They left this message for you:</p>' +
-        '<p>' + uploadMessage + '</p>' +
-        '<br>' +
-        '<p>Download the files <a href="' + process.env.SERVICE_URL + '/download/' + uploadId + '">here</a>.</p>' +
-        '<br>' +
-        '<h5>Sincerely the folks over at HADOC!</h5>';
+    const html = uploadMail0 + uploadMessage + uploadMail1 + process.env.SERVICE_URL + '/download/' + uploadId + uploadMail2;
 
     const text = 'Hello. Someone has shared some files with you!\n They left this message for you:\n' + uploadMessage + '\nDownload the files here: ' + process.env.SERVICE_URL + '/download/' + uploadId + '\nSincerely the folks over at HADOC!';
 

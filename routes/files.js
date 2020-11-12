@@ -32,6 +32,8 @@ router.get('/uploads/:id', (req, res) => {
     repo.find('uploads', { id: req.params.id })
         .then(result => {
             if (result.length === 0) return res.status(404).send({ message: 'Upload could not be found.' });
+            const date = new Date(result[0].uploadTime + Number(process.env.FILE_ACTIVE_TIME));
+            result[0].expire = date.toDateString() + ' : ' + date.toLocaleTimeString();
             return res.status(200).send(result[0]);
         });
 });

@@ -13,9 +13,10 @@ function download() {
                         showPage('');
                     } else {
                         $('#message-holder').html(result.message);
+                        $('#expire').html(result.expire);
                         const fileHolder = $('#file-holder');
                         result.files.map(file => {
-                            fileHolder.append('<li><a href="/uploads/' + id + '/' + file.originalName + '">' + file.originalName + '</a></li>');
+                            fileHolder.append('<a class="btn btn-block btn-primary" href="/uploads/' + id + '/' + file.originalName + '">' + file.originalName + '</a>');
                         });
                     }
                 });

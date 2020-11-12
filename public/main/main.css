@@ -1,3 +1,5 @@
+/* TODO order, maybe join with admin.css */
+
 body {
     background: #303F9F;
     margin: 0;
@@ -11,6 +13,7 @@ body {
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+    text-align: center;
 }
 
 .center {
@@ -54,4 +57,8 @@ html {
     position: fixed;
     top: 20px;
     right: 20px;
+}
+
+.message-box {
+    max-width: 50%;
 }
