@@ -10,6 +10,7 @@ fetch('/logintest', {
         if (response.status === 401 || response.status === 403) {
             loggedInButtons.hide();
         } else {
+            $('#user-page-button').html(sessionStorage.getItem('username'));
             loggedOutButtons.hide();
         }
     });
@@ -39,6 +40,7 @@ function login() {
                         sessionStorage.setItem('refreshToken', result.refreshToken);
                         setTimeout(() => {
                             $('#login-modal').modal('toggle');
+                            $('#user-page-button').html(sessionStorage.getItem('username'));
                             loggedOutButtons.hide();
                             loggedInButtons.show();
                         }, 1500);

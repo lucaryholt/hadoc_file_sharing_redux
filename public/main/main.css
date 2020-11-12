@@ -62,3 +62,15 @@ html {
 .message-box {
     max-width: 50%;
 }
+
+#about-button {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    font-size: 2em;
+}
+
+hr {
+    background: lightgrey;
+    width: 60%;
+}
