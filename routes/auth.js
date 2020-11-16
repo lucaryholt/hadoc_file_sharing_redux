@@ -84,6 +84,7 @@ router.post('/register', async (req, res) => {
      }
 });
 
+// The logout request is a DELETE method, as this deletes the refreshToken from the database
 router.delete('/logout', (req, res) => {
      try {
           const token = req.body.token;
