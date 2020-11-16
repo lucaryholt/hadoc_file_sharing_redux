@@ -6,6 +6,9 @@ const uploadMail0 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplate
 const uploadMail1 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/shareMail/1.html')).toString();
 const uploadMail2 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/shareMail/2.html')).toString();
 
+const confirmEmail0 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/confirmEmail/0.html')).toString();
+const confirmEmail1 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/confirmEmail/1.html')).toString();
+
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     service: process.env.MAIL_SERVICE,
@@ -37,7 +40,16 @@ function sendUploadEmail(receiver, uploadMessage, uploadId) {
     sendEmail(receiver, 'Someone shared files with you!', text, html);
 }
 
+function sendConfirmEmail(receiver, id) {
+    const html = confirmEmail0 + process.env.SERVICE_URL + '/confirm-email/' + id + confirmEmail1;
+
+    const text = 'Hello. Please confirm your email address by visiting this url: ' + process.env.SERVICE_URL + '/confirm-email/' + id + '\nSincerely the folks over at HADOC!';
+
+    sendEmail(receiver, 'Confirm your email address', text, html);
+}
+
 module.exports = {
     sendEmail,
-    sendUploadEmail
+    sendUploadEmail,
+    sendConfirmEmail
 };

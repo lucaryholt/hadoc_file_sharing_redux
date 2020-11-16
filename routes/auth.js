@@ -1,12 +1,31 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
+const mailer = require('../mail/mailer.js');
 const repo = require('../repo/repo.js');
 const jwt = require('jsonwebtoken');
 
 function generateAccessToken(user) {
      return jwt.sign({ name: user.username, roles: user.roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
 }
+
+router.get('/users/confirm-email/:id', (req, res) => {
+     try {
+          repo.find('usersNotConfirmed', { id: req.params.id })
+              .then(result => {
+                   if (result.length === 0) return res.status(404).send({ message: 'Could not confirm email.' });
+                   else {
+                        repo.insert('users', result[0])
+                            .then(result => {
+                                 repo.deleteOne('usersNotConfirmed', { id: req.params.id });
+                                 return res.status(200).send({ message: 'Email confirmed. User can now log in.' });
+                            });
+                   }
+              })
+     } catch (e) {
+          return res.status(500).send({ message: 'Internal Server Error.' });
+     }
+});
 
 router.post('/login', async (req, res) => {
      try {
@@ -70,15 +89,19 @@ router.post('/token', async (req, res) => {
 router.post('/register', async (req, res) => {
      try {
           const hashedPassword = await bcrypt.hash(req.body.password, 10);
+          const id = uuid.v4().toString();
 
-          const response = await repo.insert('users', {
-               id: uuid.v4().toString(),
+          const response = await repo.insert('usersNotConfirmed', {
+               id,
+               createdTime: new Date().getTime(),
                username: req.body.username,
                password: hashedPassword,
                roles: ["user"]
           });
 
-          return res.status(201).send({ message: 'User ' + req.body.username + ' created.' });
+          mailer.sendConfirmEmail(req.body.username, id);
+
+          return res.status(201).send({ message: 'User ' + req.body.username + ' created. Please confirm email address before logging in.' });
      } catch (e) {
           return res.status(500).send({ message: 'Internal Server Error.' });
      }

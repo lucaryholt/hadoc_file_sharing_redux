@@ -18,6 +18,7 @@ ACCESS_TOKEN_SECRET=
 REFRESH_TOKEN_SECRET=
 FILE_ACTIVE_TIME=
 REFRESH_TOKEN_ACTIVE_TIME=
+UNCONFIRMED_USER_ACTIVE_TIME=
 MAIL_HOST=
 MAIL_SERVICE=
 MAIL_USERNAME=
@@ -43,6 +44,8 @@ SERVICE_URL=
  - *FILE_ACTIVE_TIME*: how old files need to be before they are deleted (in milliseconds).
  
  - *REFRESH_TOKEN_ACTIVE_TIME*: how old refresh tokens need to be before they are deleted (in milliseconds).
+ 
+ - *UNCONFIRMED_USER_ACTIVE_TIME*: how old unconfirmed users need to be before they are deleted (in milliseconds).
  
  - *MAIL_HOST*: the smtp url for the mail host. 
    - Eg: 'smtp.gmail.com'.

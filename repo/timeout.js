@@ -49,6 +49,24 @@ function timeoutRefreshTokens() {
         });
 }
 
+function timeoutUnconfirmedUsers() {
+    repo.find('usersNotConfirmed', {})
+        .then(result => {
+            const timestamp = new Date().getTime();
+            const unconfirmedTimeout = result.filter(user => {
+                if ((timestamp - user.createdTime) > Number(process.env.UNCONFIRMED_USER_ACTIVE_TIME)) {
+                    return user;
+                }
+            });
+            unconfirmedTimeout.map(user => {
+                repo.deleteOne('usersNotConfirmed', { refreshToken: user.refreshToken })
+                    .then(result => {
+                        log(result, user);
+                    });
+            });
+        });
+}
+
 function log(result, object) {
     timeoutLogStream.write(new Date().toUTCString() + '. Deleted ' + result.deletedCount + '. Deleted info:' + JSON.stringify(object) + '\n');
 }
@@ -56,8 +74,10 @@ function log(result, object) {
 function startHandlers() {
     timeoutUploads();
     timeoutRefreshTokens();
+    timeoutUnconfirmedUsers();
     setInterval(timeoutUploads, 300000);
     setInterval(timeoutRefreshTokens, 300000);
+    setInterval(timeoutUnconfirmedUsers, 300000);
 }
 
 module.exports = startHandlers;

@@ -15,7 +15,7 @@ function showPage(page) {
 
             container.html(
                 '<div class="spinner-grow" role="status">' +
-                    '<span class="sr-only">Loading...</span>' +
+                '<span class="sr-only">Loading...</span>' +
                 '</div>'
             );
 
@@ -28,4 +28,8 @@ function showPage(page) {
         });
 }
 
-showPage(window.location.href.split("/")[3]);
+if (window.location.href.split("/")[3] === 'confirm-email') {
+    confirmEmail(showPage);
+} else {
+    showPage(window.location.href.split("/")[3]);
+}

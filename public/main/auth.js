@@ -93,7 +93,7 @@ function refreshToken(callback) {
                  .then(result => {
                      if (status === 403 || status === 401) {
                          showPage('');
-                         $('#loginModal').modal('toggle');
+                         $('#login-modal').modal('toggle');
                          loginAlert(result.message, 'warning');
                      } else {
                          sessionStorage.setItem('accessToken', result.accessToken);
@@ -150,8 +150,24 @@ function register() {
             else {
                 response.json()
                     .then(result => {
-                        console.log(result);
+                        $('#register-modal').modal('toggle');
+                        popUpAlert(result.message, 'success');
                     });
             }
+        });
+}
+
+function confirmEmail(callback) {
+    const id = window.location.href.split('/')[4];
+
+    fetch('/users/confirm-email/' + id)
+        .then(response => {
+            if (response.status !== 200) {
+                popUpAlert('Could not confirm email.', 'warning');
+            }
+            else {
+                popUpAlert('Email confirmed! You can now log in.', 'success');
+            }
+            callback('');
         });
 }

@@ -16,13 +16,13 @@ app.use(express.json());
 
 // Routes
 
-app.use(require('./routes/pages.js'));
-
 app.use(require('./routes/files.js'));
 
 app.use(require('./routes/restricted.js'));
 
 app.use(require('./routes/auth.js'));
+
+app.use(require('./routes/pages.js'));
 
 const port = Number(process.env.ACCESS_PORT);
 
