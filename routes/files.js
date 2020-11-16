@@ -70,6 +70,14 @@ router.get('/uploads/:id/:filename', (req, res) => {
 });
 
 router.post('/uploads', upload.array('files'), (req, res) => {
+    let totalSize = 0;
+
+    req.files.map(file => {
+        totalSize = totalSize + file.size;
+    });
+
+    if (totalSize > 50 * 1024 * 1024) return res.status(413).send({ message: 'Files are too large. Max total size is 50 MB.' });
+
     const id = uuid.v4();
 
     const uploadInfoObject = {
@@ -100,6 +108,9 @@ router.post('/uploads', upload.array('files'), (req, res) => {
     }, (error, response, body) => {
         if (response.statusCode === 403 || response.statusCode === 401) {
             authenticateFileServer();
+            req.files.map(file => {
+                fs.unlinkSync(path.join(__dirname, '../temp', file.filename));
+            });
             return res.send({ error: 'Error authenticating, try again.' });
         } else {
             const files = JSON.parse(response.body).files;
