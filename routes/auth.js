@@ -62,7 +62,7 @@ router.post('/auth/login', async (req, res) => {
      }
 });
 
-router.post('/auth/token', authenticator, async (req, res) => {
+router.post('/auth/token', async (req, res) => {
      const refreshToken = req.body.token;
      if (refreshToken === null) return res.status(401).send({ message: 'Please log in.' });
 
