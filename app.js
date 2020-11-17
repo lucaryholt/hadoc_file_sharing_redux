@@ -25,14 +25,14 @@ const restrictedLimit = rateLimiter({
     max: 50
 });
 
-const filesLimit = rateLimiter({
+const uploadsLimit = rateLimiter({
     windowMs: 10 * 60 * 1000,
     max: 70
 });
 
 app.use('/auth', authLimit);
 app.use('/restricted', restrictedLimit);
-app.use('/files', filesLimit);
+app.use('/uploads', uploadsLimit);
 
 // Routes
 

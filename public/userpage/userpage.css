@@ -1,5 +1,5 @@
-.upload-item {
-    background: lightgrey;
-    border-style: solid;
-    padding: 5px;
+.card {
+    text-align: left;
+    color: black;
+    width: 30rem
 }

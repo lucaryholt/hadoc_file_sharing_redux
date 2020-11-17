@@ -54,7 +54,8 @@ function logout() {
     fetch('/logout', {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
         },
         body: JSON.stringify({
             token: sessionStorage.getItem('refreshToken')
@@ -69,6 +70,7 @@ function logout() {
                         sessionStorage.removeItem('refreshToken');
                         loggedInButtons.hide();
                         loggedOutButtons.show();
+                        popUpAlert(result.message, 'info');
                         showPage('');
                     });
             }, (error) => {

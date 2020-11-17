@@ -1,6 +1,7 @@
 function showPage(pageString) {
     switch (pageString.split('/')[0]) {
         case '': {
+            window.history.replaceState('', '', '/' + pageString);
             getPageHTML('upload');
             break;
         }
@@ -10,15 +11,16 @@ function showPage(pageString) {
             break;
         }
         case 'confirm-email': {
+            window.history.replaceState('', '', '/' + pageString);
             confirmEmail();
             getPageHTML('upload');
             break;
         }
         default: {
+            window.history.replaceState('', '', '/' + pageString);
             getPageHTML(pageString);
         }
     }
-    window.history.replaceState('', '', '/' + pageString);
 }
 
 function getPageHTML(page) {

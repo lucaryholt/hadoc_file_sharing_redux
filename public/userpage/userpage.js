@@ -27,21 +27,25 @@ function appendUpload(upload) {
     let filesHtml = '';
     upload.files.map(file => {
         filesHtml = filesHtml +
-            '<li>' +
-            '<p>originalname: ' + file.originalName + '</p>' +
-            '<p>filename: ' + file.filename + '</p>' +
-            '</li>'
+            '<li>' + file.originalName + '</li>'
     });
+
     const html =
-        '<li>' +
-            '<div class="upload-item">' +
-                '<h5 class="upload-id">' + upload.id + '</h5>' +
-                '<p class="upload-message">' + upload.message + '</p>' +
-                '<p class="upload-time">' + new Date(Number(upload.uploadTime)).toUTCString() + '</p>' +
+        '<div class="card">' +
+            '<div class="card-body">' +
+                '<h5 class="card-title">' + upload.id + '</h5>' +
+                '<h6 class="card-subtitle mb-2 text-muted">Receiver: ' + upload.receiver + '</h6>' +
                 '<ul>' +
                     filesHtml +
                 '</ul>' +
+                '<a target="_blank" href="/download/' + upload.id + '" class="card-link">Share page</a>' +
+                '<a onclick="deleteUpload(\'' + upload.id + '\')" class="card-link text-danger">Delete</a>' +
             '</div>' +
-        '</li>'
+        '</div><br>'
     hook.append(html);
+}
+
+function deleteUpload(id) {
+    // TODO implement
+    console.log(id);
 }

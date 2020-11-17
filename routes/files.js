@@ -15,7 +15,7 @@ const upload = multer({
 
 fileServerAuthenticator();
 
-router.get('/files/uploads/:id', (req, res) => {
+router.get('/uploads/:id', (req, res) => {
     repo.find('uploads', { id: req.params.id })
         .then(result => {
             if (result.length === 0) return res.status(404).send({ message: 'Upload could not be found.' });
@@ -25,7 +25,7 @@ router.get('/files/uploads/:id', (req, res) => {
         });
 });
 
-router.get('/files/uploads/:id/:filename', (req, res) => {
+router.get('/uploads/:id/:filename', (req, res) => {
     repo.find('uploads', { id: req.params.id })
         .then(result => {
             const file = result[0].files.find(file => file.originalName === req.params.filename);
@@ -56,7 +56,7 @@ router.get('/files/uploads/:id/:filename', (req, res) => {
         });
 });
 
-router.post('/files/uploads', upload.array('files'), (req, res) => {
+router.post('/uploads', upload.array('files'), (req, res) => {
     let totalSize = 0;
     req.files.map(file => {
         totalSize = totalSize + file.size;
@@ -121,6 +121,12 @@ router.post('/files/uploads', upload.array('files'), (req, res) => {
                 });
         }
     });
+});
+
+router.delete('/uploads', (req, res) => {
+    // TODO implement
+
+    return res.status(501).send({ message: 'Not yet implemented.' });
 });
 
 module.exports = router;
