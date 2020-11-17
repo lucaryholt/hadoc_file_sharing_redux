@@ -1,13 +1,26 @@
-function showPage(page) {
-    if (page === 'download') {
-        window.history.replaceState('', '', '/' + page + '/' + window.location.href.split("/")[4]);
-    } else {
-        window.history.replaceState('', '', '/' + page);
+function showPage(pageString) {
+    switch (pageString.split('/')[0]) {
+        case '': {
+            getPageHTML('upload');
+            break;
+        }
+        case 'download': {
+            window.history.replaceState('', '', '/' + pageString + '/' + window.location.href.split("/")[4]);
+            getPageHTML('download');
+            break;
+        }
+        case 'confirm-email': {
+            confirmEmail(getPageHTML);
+            break;
+        }
+        default: {
+            getPageHTML(pageString);
+        }
     }
-    page = window.location.href.split("/")[3];
+    window.history.replaceState('', '', '/' + pageString);
+}
 
-    if (page === '') page = 'upload';
-
+function getPageHTML(page) {
     fetch('/pages/' + page)
         .then(response => response.text())
         .then(result => {
@@ -28,8 +41,4 @@ function showPage(page) {
         });
 }
 
-if (window.location.href.split("/")[3] === 'confirm-email') {
-    confirmEmail(showPage);
-} else {
-    showPage(window.location.href.split("/")[3]);
-}
+showPage(window.location.href.split('/')[3]);
