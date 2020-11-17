@@ -5,8 +5,7 @@ function getUploads() {
         }
     })
         .then(response => {
-            if (response.status === 403) refreshToken(getUploads());
-            else {
+            handleResponse(response, (response) => {
                 response.json()
                     .then(result => {
                         if (result.length !== 0) {
@@ -17,7 +16,9 @@ function getUploads() {
                             $('#upload-list-hook').append('<h3>No uploads... Go upload some files!</h3>');
                         }
                     });
-            }
+            }, (error) => {
+                refreshToken(getUploads());
+            });
         });
 }
 

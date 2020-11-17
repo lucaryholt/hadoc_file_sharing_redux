@@ -30,11 +30,10 @@ function login() {
         })
     })
         .then(response => {
-            if (response.status !== 200) modalAlert('Could not log in. Try again.', 'login', 'warning');
-            else {
+            handleResponse(response, (response) => {
                 response.json()
                     .then(result => {
-                        loginAlert(result.message, 'success');
+                        modalAlert(result.message, 'login', 'success');
                         sessionStorage.setItem('username', result.username);
                         sessionStorage.setItem('accessToken', result.accessToken);
                         sessionStorage.setItem('refreshToken', result.refreshToken);
@@ -45,12 +44,14 @@ function login() {
                             loggedInButtons.show();
                         }, 1500);
                     });
-            }
+            }, (error) => {
+                modalAlert(error, 'login', 'warning');
+            });
         });
 }
 
 function logout() {
-    fetch('/auth/logout', {
+    fetch('/logout', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -60,8 +61,7 @@ function logout() {
         })
     })
         .then(response => {
-            if (response.status === 500) popUpAlert('Could not log out, please try again.', 'warning');
-            else {
+            handleResponse(response, (response) => {
                 response.json()
                     .then(result => {
                         sessionStorage.removeItem('username');
@@ -71,13 +71,13 @@ function logout() {
                         loggedOutButtons.show();
                         showPage('');
                     });
-            }
+            }, (error) => {
+                popUpAlert(error, 'warning');
+            });
         });
 }
 
 function refreshToken(callback) {
-    let status = null;
-
     fetch('/auth/token', {
         method: 'POST',
         headers: {
@@ -88,47 +88,18 @@ function refreshToken(callback) {
         })
     })
         .then(response => {
-             status = response.status;
-             response.json()
-                 .then(result => {
-                     if (status === 403 || status === 401) {
-                         showPage('');
-                         $('#login-modal').modal('toggle');
-                         modalAlert(result.message, 'login', 'warning');
-                     } else {
-                         sessionStorage.setItem('accessToken', result.accessToken);
-                         callback();
-                     }
-                 });
+            handleResponse(response, (response) => {
+                response.json()
+                    .then((result) => {
+                        sessionStorage.setItem('accessToken', result.accessToken);
+                        callback();
+                    });
+            }, (error) => {
+                showPage('');
+                $('#login-modal').modal('toggle');
+                modalAlert(error, 'login', 'warning');
+            });
         });
-}
-
-function modalAlert(message, alertId, intensity) {
-    const hook = $('#' + alertId + '-alert-hook');
-    hook.html('');
-
-    hook.append(
-        '<div class="alert alert-' + intensity + ' alert-dismissible fade show" role="alert">' +
-            '<strong>' + message + '</strong>' +
-            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                '<span aria-hidden="true">&times;</span>' +
-            '</button>' +
-        '</div>'
-    );
-}
-
-function popUpAlert(message, intensity) {
-    const hook = $('#pop-up-alert-hook');
-
-    hook.append(
-        '<div id="pop-up-alert" class="alert alert-' + intensity + '" role="alert">' +
-            message +
-        '</div>'
-    );
-
-    setTimeout(() => {
-        hook.html('');
-    }, 3000);
 }
 
 function register() {
@@ -152,30 +123,31 @@ function register() {
             })
         })
             .then(response => {
-                if (response.status === 500) modalAlert('Something went wrong. Try again.', 'register', 'warning');
-                else if (response.status === 403) modalAlert('Email address is already registered.', 'register', 'warning');
-                else {
+                handleResponse(response, (response) => {
                     response.json()
                         .then(result => {
                             $('#register-modal').modal('toggle');
                             popUpAlert(result.message, 'success');
                         });
-                }
+                }, (error) => {
+                    modalAlert(error, 'register', 'warning');
+                });
             });
     }
 }
 
-function confirmEmail(callback) {
+function confirmEmail() {
     const id = window.location.href.split('/')[4];
 
     fetch('/auth/confirm-email/' + id)
         .then(response => {
-            if (response.status !== 200) {
-                popUpAlert('Could not confirm email.', 'warning');
-            }
-            else {
-                popUpAlert('Email confirmed! You can now log in.', 'success');
-            }
-            callback('');
+            handleResponse(response, (response) => {
+                response.json()
+                    .then(result => {
+                        popUpAlert(result.message, 'success');
+                    });
+            }, (error) => {
+                popUpAlert(error, 'warning');
+            });
         });
 }

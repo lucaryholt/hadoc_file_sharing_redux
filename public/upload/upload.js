@@ -18,9 +18,15 @@ function validateForm() {
             method: 'POST',
             body: formData
         })
-            .then(response => response.json())
-            .then(result => {
-                showPage('download/' + result.id);
+            .then(response => {
+                handleResponse(response, (response) => {
+                    response.json()
+                        .then(result => {
+                            showPage('download/' + result.id);
+                        });
+                }, (error) => {
+                    popUpAlert(error, 'warning');
+                });
             });
     }
 }

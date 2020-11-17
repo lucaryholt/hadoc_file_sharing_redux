@@ -10,7 +10,8 @@ function showPage(pageString) {
             break;
         }
         case 'confirm-email': {
-            confirmEmail(getPageHTML);
+            confirmEmail();
+            getPageHTML('upload');
             break;
         }
         default: {
@@ -22,22 +23,28 @@ function showPage(pageString) {
 
 function getPageHTML(page) {
     fetch('/pages/' + page)
-        .then(response => response.text())
-        .then(result => {
-            const container = $('.container');
+        .then(response => {
+            handleResponse(response, (response) => {
+                response.text()
+                    .then(result => {
+                        const container = $('.container');
 
-            container.html(
-                '<div class="spinner-grow" role="status">' +
-                '<span class="sr-only">Loading...</span>' +
-                '</div>'
-            );
+                        container.html(
+                            '<div class="spinner-grow" role="status">' +
+                            '<span class="sr-only">Loading...</span>' +
+                            '</div>'
+                        );
 
-            setTimeout(() => {
-                container.html('');
-                container.append(result + '');
-                if (page === 'download') download();
-                if (page === 'userpage') getUploads();
-            }, 750);
+                        setTimeout(() => {
+                            container.html('');
+                            container.append(result + '');
+                            if (page === 'download') download();
+                            if (page === 'userpage') getUploads();
+                        }, 750);
+                    });
+            }, (error) => {
+                popUpAlert(error, 'warning');
+            });
         });
 }
 
