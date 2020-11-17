@@ -5,28 +5,15 @@ const path = require('path');
 const fs = require('fs');
 const uuid = require('uuid');
 const multer = require('multer');
-const repo = require('../repo/repo.js');
-const mailer = require('../mail/mailer.js');
+const repo = require('../util/repo.js');
+const mailer = require('../util/mailer.js');
+const fileServerAuthenticator = require('../util/fileServerAuthenticate.js');
 
 const upload = multer({
     dest: path.join(__dirname, '../temp')
 });
 
-authenticateFileServer();
-
-function authenticateFileServer() {
-    request.post({
-        url: process.env.FILE_SERVER_URL + '/authenticate',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            authkey: process.env.FILE_SERVER_AUTHKEY
-        })
-    }, (error, response, body) => {
-        process.env.FILE_SERVER_ACCESSTOKEN = JSON.parse(response.body).accessToken;
-    });
-}
+fileServerAuthenticator();
 
 router.get('/files/uploads/:id', (req, res) => {
     repo.find('uploads', { id: req.params.id })
@@ -50,8 +37,8 @@ router.get('/files/uploads/:id/:filename', (req, res) => {
                     }
                 }, (error, response, body) => {
                     if (response.statusCode === 403 || response.statusCode === 401) {
-                        authenticateFileServer();
-                        return res.send({ error: 'Error authenticating, try again.' })
+                        fileServerAuthenticator();
+                        return res.status(500).send({ error: 'Error authenticating, try again.' })
                     } else {
                         const data = new Uint8Array(JSON.parse(response.body).file.data);
 
@@ -71,17 +58,13 @@ router.get('/files/uploads/:id/:filename', (req, res) => {
 
 router.post('/files/uploads', upload.array('files'), (req, res) => {
     let totalSize = 0;
-
     req.files.map(file => {
         totalSize = totalSize + file.size;
     });
-
     if (totalSize > 50 * 1024 * 1024) return res.status(413).send({ message: 'Files are too large. Max total size is 50 MB.' });
 
-    const id = uuid.v4();
-
     const uploadInfoObject = {
-        id,
+        id: uuid.v4(),
         uploadTime: new Date().getTime(),
         message: req.body.message,
         files: []
@@ -107,11 +90,11 @@ router.post('/files/uploads', upload.array('files'), (req, res) => {
         }
     }, (error, response, body) => {
         if (response.statusCode === 403 || response.statusCode === 401) {
-            authenticateFileServer();
+            fileServerAuthenticator();
             req.files.map(file => {
                 fs.unlinkSync(path.join(__dirname, '../temp', file.filename));
             });
-            return res.send({ error: 'Error authenticating, try again.' });
+            return res.status(500).send({ error: 'Error authenticating, try again.' });
         } else {
             const files = JSON.parse(response.body).files;
 
@@ -129,12 +112,12 @@ router.post('/files/uploads', upload.array('files'), (req, res) => {
 
             if (req.body.receiver !== '') {
                 uploadInfoObject.receiver = req.body.receiver;
-                mailer.sendUploadEmail(req.body.receiver, req.body.message, id);
+                mailer.sendUploadEmail(req.body.receiver, req.body.message, uploadInfoObject.id);
             }
 
             repo.insert('uploads', uploadInfoObject)
                 .then(result => {
-                    return res.send({ id });
+                    return res.status(200).send({ id: uploadInfoObject.id });
                 });
         }
     });

@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
-const mailer = require('../mail/mailer.js');
-const repo = require('../repo/repo.js');
+const mailer = require('../util/mailer.js');
+const repo = require('../util/repo.js');
 const jwt = require('jsonwebtoken');
+const authenticator = require('../util/jwtAuthenticate.js');
 
 function generateAccessToken(user) {
      return jwt.sign({ name: user.username, roles: user.roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
@@ -61,7 +62,7 @@ router.post('/auth/login', async (req, res) => {
      }
 });
 
-router.post('/auth/token', async (req, res) => {
+router.post('/auth/token', authenticator, async (req, res) => {
      const refreshToken = req.body.token;
      if (refreshToken === null) return res.status(401).send({ message: 'Please log in.' });
 
@@ -114,7 +115,7 @@ router.post('/auth/register', async (req, res) => {
 });
 
 // The logout request is a DELETE method, as this deletes the refreshToken from the database
-router.delete('/logout', (req, res) => {
+router.delete('/logout', authenticator, (req, res) => {
      try {
           const token = req.body.token;
 

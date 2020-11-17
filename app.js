@@ -1,5 +1,5 @@
 require('dotenv').config();
-require('./repo/timeout.js')();
+require('./util/timeout.js')();
 
 const express = require('express');
 const fs = require('fs');
@@ -17,7 +17,7 @@ const rateLimiter = require('express-rate-limit');
 
 const authLimit = rateLimiter({
     windowMs: 10 * 60 * 1000,
-    max: 3
+    max: 100
 });
 
 const restrictedLimit = rateLimiter({

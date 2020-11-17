@@ -1,25 +1,13 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 const path = require('path');
-const repo = require('../repo/repo.js');
+const authenticator = require('../util/jwtAuthenticate.js');
+const repo = require('../util/repo.js');
 
-function authenticateUser(req, res, next) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (token === null) return res.status(401).send({ message: 'No token received.' });
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
-        if (error) return res.status(403).send({ message: 'Not correct token.' });
-        req.user = user;
-        next();
-    });
-}
-
-router.get('/logintest', authenticateUser, (req, res) => {
+router.get('/logintest', authenticator, (req, res) => {
      return res.status(200).send({ message: 'Logged in.' });
 });
 
-router.get('/restricted/uploads', authenticateUser, async (req, res) => {
+router.get('/restricted/uploads', authenticator, async (req, res) => {
     try {
         let query = null;
         if (req.user.roles.includes('admin')) query = {};
