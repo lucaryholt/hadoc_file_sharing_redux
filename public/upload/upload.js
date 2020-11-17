@@ -14,7 +14,7 @@ function validateForm() {
     } else {
         formData.append('username', sessionStorage.getItem('username'));
 
-        fetch('/uploads', {
+        fetch('/files/uploads', {
             method: 'POST',
             body: formData
         })

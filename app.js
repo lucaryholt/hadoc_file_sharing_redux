@@ -7,12 +7,32 @@ const path = require('path');
 const morgan = require('morgan');
 
 const app = express();
+app.use(express.static('public'));
+app.use(express.json());
 
 const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
 app.use(morgan('combined', { stream: accessLogStream }));
 
-app.use(express.static('public'));
-app.use(express.json());
+const rateLimiter = require('express-rate-limit');
+
+const authLimit = rateLimiter({
+    windowMs: 10 * 60 * 1000,
+    max: 100
+});
+
+const restrictedLimit = rateLimiter({
+    windowMs: 10 * 60 * 1000,
+    max: 50
+});
+
+const filesLimit = rateLimiter({
+    windowMs: 10 * 60 * 1000,
+    max: 70
+});
+
+app.use('/auth', authLimit);
+app.use('/restricted', restrictedLimit);
+app.use('/files', filesLimit);
 
 // Routes
 

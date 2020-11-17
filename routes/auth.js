@@ -9,7 +9,7 @@ function generateAccessToken(user) {
      return jwt.sign({ name: user.username, roles: user.roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
 }
 
-router.get('/users/confirm-email/:id', (req, res) => {
+router.get('/auth/confirm-email/:id', (req, res) => {
      try {
           repo.find('usersNotConfirmed', { id: req.params.id })
               .then(result => {
@@ -27,7 +27,7 @@ router.get('/users/confirm-email/:id', (req, res) => {
      }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/auth/login', async (req, res) => {
      try {
           const userArray = await repo.find('users', { username: req.body.username });
           const user = userArray[0];
@@ -61,7 +61,7 @@ router.post('/login', async (req, res) => {
      }
 });
 
-router.post('/token', async (req, res) => {
+router.post('/auth/token', async (req, res) => {
      const refreshToken = req.body.token;
      if (refreshToken === null) return res.status(401).send({ message: 'Please log in.' });
 
@@ -86,7 +86,7 @@ router.post('/token', async (req, res) => {
      }
 });
 
-router.post('/register', async (req, res) => {
+router.post('/auth/register', async (req, res) => {
      try {
           const hashedPassword = await bcrypt.hash(req.body.password, 10);
           const id = uuid.v4().toString();
@@ -114,7 +114,7 @@ router.post('/register', async (req, res) => {
 });
 
 // The logout request is a DELETE method, as this deletes the refreshToken from the database
-router.delete('/logout', (req, res) => {
+router.delete('/auth/logout', (req, res) => {
      try {
           const token = req.body.token;
 

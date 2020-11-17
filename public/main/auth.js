@@ -19,7 +19,7 @@ function login() {
     const username = document.getElementById('username-input').value;
     const password = document.getElementById('password-input').value;
 
-    fetch('/login', {
+    fetch('/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -50,7 +50,7 @@ function login() {
 }
 
 function logout() {
-    fetch('/logout', {
+    fetch('/auth/logout', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ function logout() {
 function refreshToken(callback) {
     let status = null;
 
-    fetch('/token', {
+    fetch('/auth/token', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -141,7 +141,7 @@ function register() {
     } else if (password.length < 8) {
         modalAlert('Password is too short. Needs to be at least 8 characters.', 'register', 'warning');
     } else {
-        fetch('/register', {
+        fetch('/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -168,7 +168,7 @@ function register() {
 function confirmEmail(callback) {
     const id = window.location.href.split('/')[4];
 
-    fetch('/users/confirm-email/' + id)
+    fetch('/auth/confirm-email/' + id)
         .then(response => {
             if (response.status !== 200) {
                 popUpAlert('Could not confirm email.', 'warning');

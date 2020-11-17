@@ -3,7 +3,7 @@ function download() {
 
     let status = null;
 
-    fetch('/uploads/' + id)
+    fetch('/files/uploads/' + id)
         .then(response => {
             status = response.status;
             response.json()
@@ -16,7 +16,7 @@ function download() {
                         $('#expire').html(result.expire);
                         const fileHolder = $('#file-holder');
                         result.files.map(file => {
-                            fileHolder.append('<a class="btn btn-block btn-primary" href="/uploads/' + id + '/' + file.originalName + '">' + file.originalName + '</a>');
+                            fileHolder.append('<a class="btn btn-block btn-primary" href="/files/uploads/' + id + '/' + file.originalName + '">' + file.originalName + '</a>');
                         });
                     }
                 });
