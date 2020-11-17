@@ -30,7 +30,7 @@ function login() {
         })
     })
         .then(response => {
-            if (response.status !== 200) loginAlert('Could not log in. Try again.', 'warning');
+            if (response.status !== 200) modalAlert('Could not log in. Try again.', 'login', 'warning');
             else {
                 response.json()
                     .then(result => {
@@ -94,7 +94,7 @@ function refreshToken(callback) {
                      if (status === 403 || status === 401) {
                          showPage('');
                          $('#login-modal').modal('toggle');
-                         loginAlert(result.message, 'warning');
+                         modalAlert(result.message, 'login', 'warning');
                      } else {
                          sessionStorage.setItem('accessToken', result.accessToken);
                          callback();
@@ -103,8 +103,8 @@ function refreshToken(callback) {
         });
 }
 
-function loginAlert(message, intensity) {
-    const hook = $('#alert-hook');
+function modalAlert(message, alertId, intensity) {
+    const hook = $('#' + alertId + '-alert-hook');
     hook.html('');
 
     hook.append(
@@ -146,7 +146,8 @@ function register() {
         })
     })
         .then(response => {
-            if (response.status === 500) popUpAlert('Something went wrong. Try again.', 'warning');
+            if (response.status === 500) modalAlert('Something went wrong. Try again.', 'register', 'warning');
+            else if (response.status === 403) modalAlert('Email address is already registered.', 'register', 'warning');
             else {
                 response.json()
                     .then(result => {

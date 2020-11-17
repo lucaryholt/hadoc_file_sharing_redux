@@ -91,6 +91,12 @@ router.post('/register', async (req, res) => {
           const hashedPassword = await bcrypt.hash(req.body.password, 10);
           const id = uuid.v4().toString();
 
+          const user = await repo.find('users', { username: req.body.username });
+          if (user.length !== 0) return res.status(403).send({ message: 'User with that email is already registered.' });
+
+          const unconfirmedUser = await repo.find('usersNotConfirmed', { username: req.body.username });
+          if (unconfirmedUser.length !== 0) return res.status(403).send({ message: 'User with that email is already registered.' });
+
           const response = await repo.insert('usersNotConfirmed', {
                id,
                createdTime: new Date().getTime(),
