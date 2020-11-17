@@ -134,28 +134,35 @@ function popUpAlert(message, intensity) {
 function register() {
     const username = document.getElementById('username-register-input').value;
     const password = document.getElementById('password-register-input').value;
+    const passwordConfirm = document.getElementById('password-confirm-register-input').value;
 
-    fetch('/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            username,
-            password
+    if (password !== passwordConfirm) {
+        modalAlert('Passwords do not match.', 'register', 'warning');
+    } else if (password.length < 8) {
+        modalAlert('Password is too short. Needs to be at least 8 characters.', 'register', 'warning');
+    } else {
+        fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
         })
-    })
-        .then(response => {
-            if (response.status === 500) modalAlert('Something went wrong. Try again.', 'register', 'warning');
-            else if (response.status === 403) modalAlert('Email address is already registered.', 'register', 'warning');
-            else {
-                response.json()
-                    .then(result => {
-                        $('#register-modal').modal('toggle');
-                        popUpAlert(result.message, 'success');
-                    });
-            }
-        });
+            .then(response => {
+                if (response.status === 500) modalAlert('Something went wrong. Try again.', 'register', 'warning');
+                else if (response.status === 403) modalAlert('Email address is already registered.', 'register', 'warning');
+                else {
+                    response.json()
+                        .then(result => {
+                            $('#register-modal').modal('toggle');
+                            popUpAlert(result.message, 'success');
+                        });
+                }
+            });
+    }
 }
 
 function confirmEmail(callback) {
