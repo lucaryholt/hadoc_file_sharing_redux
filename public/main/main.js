@@ -1,23 +1,20 @@
 function showPage(pageString) {
+    window.history.replaceState('', '', '/' + pageString);
     switch (pageString.split('/')[0]) {
         case '': {
-            window.history.replaceState('', '', '/' + pageString);
             getPageHTML('upload');
             break;
         }
         case 'download': {
-            window.history.replaceState('', '', '/' + pageString + '/' + window.location.href.split("/")[4]);
             getPageHTML('download');
             break;
         }
         case 'confirm-email': {
-            window.history.replaceState('', '', '/' + pageString);
             confirmEmail();
             getPageHTML('upload');
             break;
         }
         default: {
-            window.history.replaceState('', '', '/' + pageString);
             getPageHTML(pageString);
         }
     }
@@ -50,4 +47,4 @@ function getPageHTML(page) {
         });
 }
 
-showPage(window.location.href.split('/')[3]);
+showPage(window.location.pathname.substring(1));
