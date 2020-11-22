@@ -1,3 +1,5 @@
+const hook = $('#upload-list-hook');
+
 function getUploads() {
     fetch('/restricted/uploads', {
         headers: {
@@ -8,12 +10,13 @@ function getUploads() {
             handleResponse(response, (response) => {
                 response.json()
                     .then(result => {
+                        hook.html('');
                         if (result.length !== 0) {
                             result.map(upload => {
                                 appendUpload(upload);
                             });
                         } else {
-                            $('#upload-list-hook').append('<h3>No uploads... Go upload some files!</h3>');
+                            hook.append('<h3>No uploads... Go upload some files!</h3>');
                         }
                     });
             }, (error) => {
@@ -23,7 +26,6 @@ function getUploads() {
 }
 
 function appendUpload(upload) {
-    const hook = $('#upload-list-hook');
     let filesHtml = '';
     upload.files.map(file => {
         filesHtml = filesHtml +
@@ -46,6 +48,18 @@ function appendUpload(upload) {
 }
 
 function deleteUpload(id) {
-    // TODO implement
-    console.log(id);
+    fetch('/uploads/' + id, {
+        method: 'DELETE',
+        headers: {
+            'authorization': 'Bearer ' + sessionStorage.getItem('accessToken')
+        }
+    })
+        .then(response => {
+            handleResponse(response, (response) => {
+                getUploads();
+                popUpAlert('Upload deleted!', 'success');
+            }, (error) => {
+                popUpAlert(error, 'warning');
+            });
+        })
 }
