@@ -9,6 +9,9 @@ const uploadMail2 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplate
 const confirmEmail0 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/confirmEmail/0.html')).toString();
 const confirmEmail1 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/confirmEmail/1.html')).toString();
 
+const resetPasswordEmail0 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/resetPasswordMail/0.html')).toString();
+const resetPasswordEmail1 = fs.readFileSync(path.join(__dirname, '../assets/mailTemplates/resetPasswordMail/1.html')).toString();
+
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     service: process.env.MAIL_SERVICE,
@@ -48,8 +51,17 @@ function sendConfirmEmail(receiver, id) {
     sendEmail(receiver, 'Confirm your email address', text, html);
 }
 
+function sendResetPasswordEmail(receiver, id) {
+    const html = resetPasswordEmail0 + process.env.SERVICE_URL + '/resetpassword/' + id + resetPasswordEmail1;
+
+    const text = 'Hello. Please reset your password by visiting this url: ' + process.env.SERVICE_URL + '/resetpassword/' + id + '\nSincerely the folks over at HADOC!';
+
+    sendEmail(receiver, 'Reset your password', text, html);
+}
+
 module.exports = {
     sendEmail,
     sendUploadEmail,
-    sendConfirmEmail
+    sendConfirmEmail,
+    sendResetPasswordEmail
 };

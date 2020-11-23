@@ -14,6 +14,10 @@ function showPage(pageString) {
             getPageHTML('upload');
             break;
         }
+        case 'resetpassword': {
+            getPageHTML('resetpassword');
+            break;
+        }
         default: {
             getPageHTML(pageString);
         }

@@ -28,6 +28,49 @@ router.get('/auth/confirm-email/:id', (req, res) => {
      }
 });
 
+router.get('/auth/requestpasswordreset/:username', async (req, res) => {
+     try {
+          const id = uuid.v4();
+          const user = await repo.find('users', { username: req.params.username })
+
+          if (user.length === 0) return res.status(404).send({ message: 'No user with that email.' });
+          else {
+               repo.insert('passwordresets', {
+                    id,
+                    requestTime: new Date().getTime(),
+                    username: req.params.username
+               })
+                   .then(result => {
+                        mailer.sendResetPasswordEmail(req.params.username, id);
+
+                        return res.status(200).send({ message: 'Email sent! Please click link in email.' });
+                   });
+          }
+     } catch (e) {
+          return res.status(500).send({ message: 'Internal Server Error' });
+     }
+});
+
+router.post('/auth/resetpassword', async (req, res) => {
+     try {
+          const resetPasswordRequest = await repo.find('passwordresets', { id: req.body.id });
+
+          if (resetPasswordRequest.length === 0) return res.status(404).send({ message: 'Could not find that request.' });
+
+          const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+          repo.update('users', { username: resetPasswordRequest[0].username }, { password: hashedPassword })
+              .then(result => {
+                    repo.deleteOne('passwordresets', { id: resetPasswordRequest[0].id })
+                        .then(result => {
+                              return res.status(200).send({ message: 'Password reset. You can now log in again.' });
+                        });
+              });
+     } catch (e) {
+          return res.status(500).send({ message: 'Internal Server Error' });
+     }
+});
+
 router.post('/auth/login', async (req, res) => {
      try {
           const userArray = await repo.find('users', { username: req.body.username });

@@ -138,6 +138,20 @@ function register() {
     }
 }
 
+function requestPasswordReset() {
+    const username = document.getElementById('username-password-reset-input').value;
+
+    fetch('/auth/requestpasswordreset/' + username)
+        .then(response => {
+            handleResponse(response, (response) => {
+                $('#request-password-reset-modal').modal('hide');
+                popUpAlert('Email has been sent. Please click link in email to reset password!', 'success');
+            }, (error) => {
+                modalAlert(error, 'request-password-reset', 'warning');
+            });
+        })
+}
+
 function confirmEmail() {
     const id = window.location.href.split('/')[4];
 

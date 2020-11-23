@@ -45,6 +45,9 @@
                     </div>
                 </form>
             </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#request-password-reset-modal" onclick="$('#login-modal').modal('hide');">Reset password</button>
+            </div>
         </div>
     </div>
 </div>
@@ -61,6 +64,23 @@
                         <input type="password" id="password-register-input" placeholder="Password" class="form-control" required>
                         <input type="password" id="password-confirm-register-input" placeholder="Confirm password" class="form-control" required>
                         <button type="submit" class="btn btn-block btn-primary">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal containing request password reset form -->
+<div class="modal fade" id="request-password-reset-modal" tabindex="-1" role="dialog" aria-labelledby="register-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div id="request-password-reset-alert-hook"></div>
+                <form onsubmit="requestPasswordReset(); return false;">
+                    <div class="form-group">
+                        <input type="email" id="username-password-reset-input" placeholder="Email" class="form-control" required>
+                        <button type="submit" class="btn btn-block btn-primary">Reset password</button>
                     </div>
                 </form>
             </div>
