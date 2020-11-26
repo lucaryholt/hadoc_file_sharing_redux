@@ -8,7 +8,7 @@ const multer = require('multer');
 const repo = require('../util/repo.js');
 const mailer = require('../util/mailer.js');
 const fileServerAuthenticator = require('../util/fileServerAuthenticate.js');
-const authenticator = require('../util/jwtAuthenticate.js');
+const authenticator = require('../util/jwtAuthenticate.js').authenticateUser;
 
 const upload = multer({
     dest: path.join(__dirname, '../temp')
@@ -56,6 +56,8 @@ router.get('/uploads/:id/:filename', (req, res) => {
             }
         });
 });
+
+// TODO change rate limiting to once every minute or something like that
 
 router.post('/uploads', upload.array('files'), (req, res) => {
     let totalSize = 0;

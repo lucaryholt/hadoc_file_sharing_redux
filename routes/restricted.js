@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const path = require('path');
-const authenticator = require('../util/jwtAuthenticate.js');
+const authenticator = require('../util/jwtAuthenticate.js').authenticateUser;
 const repo = require('../util/repo.js');
 
 router.get('/logintest', authenticator, (req, res) => {

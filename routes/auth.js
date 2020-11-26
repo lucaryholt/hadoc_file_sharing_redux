@@ -4,7 +4,7 @@ const uuid = require('uuid');
 const mailer = require('../util/mailer.js');
 const repo = require('../util/repo.js');
 const jwt = require('jsonwebtoken');
-const authenticator = require('../util/jwtAuthenticate.js');
+const authenticator = require('../util/jwtAuthenticate.js').authenticateUser;
 
 function generateAccessToken(user) {
      return jwt.sign({ name: user.username, roles: user.roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
@@ -43,7 +43,7 @@ router.get('/auth/requestpasswordreset/:username', async (req, res) => {
                    .then(result => {
                         mailer.sendResetPasswordEmail(req.params.username, id);
 
-                        return res.status(200).send({ message: 'Email sent! Please click link in email.' });
+                        return res.status(200).send({ message: 'Email has been sent. Please click link in email to reset password!' });
                    });
           }
      } catch (e) {

@@ -144,8 +144,11 @@ function requestPasswordReset() {
     fetch('/auth/requestpasswordreset/' + username)
         .then(response => {
             handleResponse(response, (response) => {
-                $('#request-password-reset-modal').modal('hide');
-                popUpAlert('Email has been sent. Please click link in email to reset password!', 'success');
+                response.json()
+                    .then(result => {
+                        $('#request-password-reset-modal').modal('hide');
+                        popUpAlert(result.message, 'success');
+                    });
             }, (error) => {
                 modalAlert(error, 'request-password-reset', 'warning');
             });

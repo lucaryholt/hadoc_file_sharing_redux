@@ -14,6 +14,14 @@ function validateForm() {
     } else {
         formData.append('username', sessionStorage.getItem('username'));
 
+        const container = $('.container');
+
+        container.html(
+            '<div class="spinner-border m-5" role="status">' +
+                '<span class="sr-only">Loading...</span>' +
+            '</div>'
+        );
+
         fetch('/uploads', {
             method: 'POST',
             body: formData

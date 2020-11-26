@@ -19,8 +19,11 @@ function resetPassword() {
         })
             .then(response => {
                 handleResponse(response, (response) => {
-                    popUpAlert('Password reset. You can now log in.', 'success');
-                    showPage('');
+                    response.json()
+                        .then(result => {
+                            popUpAlert(result.message, 'success');
+                            showPage('');
+                        });
                 }, (error) => {
                     popUpAlert(error, 'warning');
                 });

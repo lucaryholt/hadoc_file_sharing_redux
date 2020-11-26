@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const path = require('path');
 
-router.get(['/', '/download/:id', '/userpage', '/about', '/confirm-email/:id', '/resetpassword/:id'], (req, res) => {
+router.get(['/', '/download/:id', '/userpage', '/about', '/confirm-email/:id', '/resetpassword/:id', '/admin'], (req, res) => {
     return res.sendFile(path.join(__dirname, '../public/main/main.html'));
 });
 
