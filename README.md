@@ -1,6 +1,16 @@
 # Hadoc File Sharing Redux
 New and Improved Hadoc File Sharing
 
+## Features
+ - Upload and share files
+   - Share via email
+   - Automatically deleted after a set amount of time
+ - Login
+   - Email confirmation
+   - Reset password
+   - Keep track and delete of uploaded files
+   - JWT
+
 ## Configuration
 This is made to work with my [**GP File Server**](https://github.com/lucaryholt/gp_file_server).
 Check its repository for instructions on how to set it up.
@@ -61,3 +71,7 @@ SERVICE_URL=
  
 ## Running the server
 To run the server you can run **npm run start-prod** in the server directory. 
+
+## Known issues
+ - When there is too much content on the screen or too zoomed in, top content is not viewable.
+ - Some file names (starts with a punctuation mark) causes problems when uploaded.
