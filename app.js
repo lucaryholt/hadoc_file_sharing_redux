@@ -35,7 +35,7 @@ app.use('/restricted', restrictedLimit);
 app.use('/uploads', uploadsLimit);
 
 // Routes
-app.use(require('./routes/files.js'));
+app.use(require('./routes/uploads.js'));
 
 app.use(require('./routes/restricted.js'));
 

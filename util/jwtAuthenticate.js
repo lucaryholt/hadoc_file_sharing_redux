@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-function authenticateUser(req, res, next) {
+function authorizeUser(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (token === null) return res.status(401).send({ message: 'No token received.' });
@@ -12,7 +12,7 @@ function authenticateUser(req, res, next) {
     });
 }
 
-function authenticateAdmin(req, res, next) {
+function authorizeAdmin(req, res, next) {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
     if (token === null) return res.status(401).send({ message: 'No token received.' });
@@ -26,6 +26,6 @@ function authenticateAdmin(req, res, next) {
 }
 
 module.exports = {
-    authenticateUser,
-    authenticateAdmin
+    authorizeUser,
+    authorizeAdmin
 };

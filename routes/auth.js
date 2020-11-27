@@ -4,13 +4,13 @@ const uuid = require('uuid');
 const mailer = require('../util/mailer.js');
 const repo = require('../util/repo.js');
 const jwt = require('jsonwebtoken');
-const authenticator = require('../util/jwtAuthenticate.js').authenticateUser;
+const authorizeUser = require('../util/jwtAuthenticate.js').authorizeUser;
 
 function generateAccessToken(user) {
      return jwt.sign({ name: user.username, roles: user.roles }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '40m' });
 }
 
-router.get('/auth/confirm-email/:id', (req, res) => {
+router.get('/auth/confirm-email/:id', async (req, res) => {
      try {
           repo.find('usersNotConfirmed', { id: req.params.id })
               .then(result => {
@@ -34,18 +34,17 @@ router.get('/auth/requestpasswordreset/:username', async (req, res) => {
           const user = await repo.find('users', { username: req.params.username })
 
           if (user.length === 0) return res.status(404).send({ message: 'No user with that email.' });
-          else {
-               repo.insert('passwordresets', {
-                    id,
-                    requestTime: new Date().getTime(),
-                    username: req.params.username
-               })
-                   .then(result => {
-                        mailer.sendResetPasswordEmail(req.params.username, id);
 
-                        return res.status(200).send({ message: 'Email has been sent. Please click link in email to reset password!' });
-                   });
-          }
+          repo.insert('passwordresets', {
+               id,
+               requestTime: new Date().getTime(),
+               username: req.params.username
+          })
+              .then(result => {
+                   mailer.sendResetPasswordEmail(req.params.username, id);
+
+                   return res.status(200).send({ message: 'Email has been sent to ' + req.params.username + '. Please click link in email to reset password!' });
+              });
      } catch (e) {
           return res.status(500).send({ message: 'Internal Server Error' });
      }
@@ -84,12 +83,10 @@ router.post('/auth/login', async (req, res) => {
                const accessToken = generateAccessToken(user);
                const refreshToken = jwt.sign({ name: user.username, roles: user.roles }, process.env.REFRESH_TOKEN_SECRET);
 
-               const response = await repo.insert('refreshTokens', {
+               await repo.insert('refreshTokens', {
                     refreshToken,
                     authTime: new Date().getTime()
                });
-
-               if (response === undefined) return res.status(500).send({ message: 'Error with database communication. Try again.' });
 
                return res.status(200).send({
                     message: 'Log in complete.',
@@ -112,7 +109,7 @@ router.post('/auth/token', async (req, res) => {
      try {
           const response = await repo.find('refreshTokens', { refreshToken: refreshToken });
 
-          if (response === undefined) return res.status(403).send({ message: 'Could not authorize token. Please log in and try again.' });
+          if (response.length === 0) return res.status(403).send({ message: 'Could not authorize token. Please log in and try again.' });
 
           jwt.sign(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
                if (error) {
@@ -132,16 +129,20 @@ router.post('/auth/token', async (req, res) => {
 
 router.post('/auth/register', async (req, res) => {
      try {
-          const hashedPassword = await bcrypt.hash(req.body.password, 10);
           const id = uuid.v4().toString();
 
           const user = await repo.find('users', { username: req.body.username });
           if (user.length !== 0) return res.status(403).send({ message: 'User with that email is already registered.' });
 
           const unconfirmedUser = await repo.find('usersNotConfirmed', { username: req.body.username });
-          if (unconfirmedUser.length !== 0) return res.status(403).send({ message: 'User with that email is already registered.' });
+          if (unconfirmedUser.length !== 0) {
+               mailer.sendConfirmEmail(req.body.username, id);
+               return res.status(403).send({ message: 'User with that email is already registered. Confirmation email has been sent again.' });
+          }
 
-          const response = await repo.insert('usersNotConfirmed', {
+          const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+          await repo.insert('usersNotConfirmed', {
                id,
                createdTime: new Date().getTime(),
                username: req.body.username,
@@ -158,13 +159,9 @@ router.post('/auth/register', async (req, res) => {
 });
 
 // The logout request is a DELETE method, as this deletes the refreshToken from the database
-router.delete('/logout', authenticator, (req, res) => {
+router.delete('/logout', authorizeUser, async (req, res) => {
      try {
-          const token = req.body.token;
-
-          const response = repo.deleteOne('refreshTokens', { refreshToken: token });
-
-          if (response === undefined) return res.status(500).send({ message: 'Error with database communication. Try again.' });
+          await repo.deleteOne('refreshTokens', { refreshToken: req.body.token });
 
           return res.status(200).send({ message: 'Logout complete.' });
      } catch (e) {

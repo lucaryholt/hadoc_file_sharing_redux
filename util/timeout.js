@@ -72,9 +72,6 @@ function log(result, object) {
 }
 
 function startHandlers() {
-    timeoutUploads();
-    timeoutRefreshTokens();
-    timeoutUnconfirmedUsers();
     setInterval(timeoutUploads, 300000);
     setInterval(timeoutRefreshTokens, 300000);
     setInterval(timeoutUnconfirmedUsers, 300000);

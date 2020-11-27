@@ -1,7 +1,5 @@
-const hook = $('#users-hook');
-
 function getUsers() {
-    hook.html('');
+    $('#users-hook').html('');
 
     fetch('/admin/users', {
         headers: {
@@ -41,7 +39,7 @@ function appendUser(user) {
                 '<a onclick="deleteUser(\'' + user.id + '\')" class="card-link text-danger">Delete</a>' +
             '</div>' +
         '</div><br>'
-    hook.append(html);
+    $('#users-hook').append(html);
 }
 
 function deleteUser(id) {

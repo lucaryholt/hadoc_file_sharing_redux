@@ -8,7 +8,7 @@ const multer = require('multer');
 const repo = require('../util/repo.js');
 const mailer = require('../util/mailer.js');
 const fileServerAuthenticator = require('../util/fileServerAuthenticate.js');
-const authenticator = require('../util/jwtAuthenticate.js').authenticateUser;
+const authorizeUser = require('../util/jwtAuthenticate.js').authorizeUser;
 
 const upload = multer({
     dest: path.join(__dirname, '../temp')
@@ -126,7 +126,7 @@ router.post('/uploads', upload.array('files'), (req, res) => {
     });
 });
 
-router.delete('/uploads/:id', authenticator, async (req, res) => {
+router.delete('/uploads/:id', authorizeUser, async (req, res) => {
     try {
         const upload = await repo.find('uploads', { id: req.params.id });
 

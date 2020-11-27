@@ -1,21 +1,17 @@
 const router = require('express').Router();
 const path = require('path');
-const authenticator = require('../util/jwtAuthenticate.js').authenticateUser;
+const authorizeUser = require('../util/jwtAuthenticate.js').authorizeUser;
 const repo = require('../util/repo.js');
 
-router.get('/logintest', authenticator, (req, res) => {
+router.get('/logintest', authorizeUser, (req, res) => {
      return res.status(200).send({ message: 'Logged in.' });
 });
 
-router.get('/restricted/uploads', authenticator, async (req, res) => {
+router.get('/restricted/uploads', authorizeUser, async (req, res) => {
     try {
-        let query = null;
-        if (req.user.roles.includes('admin')) query = {};
-        else query = { uploader: req.user.name };
+        const query = req.user.roles.includes('admin') ? {} : { uploader: req.user.name };
 
         const uploads = await repo.find('uploads', query);
-
-        if (uploads === undefined) return res.sendStatus(500);
 
         return res.status(200).send(uploads);
     } catch (e) {

@@ -18,10 +18,6 @@ function showPage(pageString) {
             getPageHTML('resetpassword');
             break;
         }
-        case 'userpage': {
-            getPageHTML('userpage');
-            break;
-        }
         default: {
             getPageHTML(pageString);
         }
@@ -47,7 +43,7 @@ function getPageHTML(page) {
                             container.append(result + '');
                             //container.append('<h1>yo</h1>');
                             if (page === 'download') download();
-                            if (page.includes('userpage')) getUploads();
+                            if (page.includes('userpage'))getUploads();
                         }, 750);
                     });
             }, (error) => {

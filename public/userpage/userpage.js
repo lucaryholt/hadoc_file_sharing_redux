@@ -27,8 +27,7 @@ function getUploads() {
 function appendUpload(upload) {
     let filesHtml = '';
     upload.files.map(file => {
-        filesHtml = filesHtml +
-            '<li>' + file.originalName + '</li>'
+        filesHtml = filesHtml + '<li>' + file.originalName + '</li>'
     });
 
     const html =

@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const jwtAuthenticate = require('../util/jwtAuthenticate.js').authenticateAdmin;
+const authorizeAdmin = require('../util/jwtAuthenticate.js').authorizeAdmin;
 const repo = require('../util/repo.js');
 
-router.get('/admin/users', jwtAuthenticate, async (req, res) => {
+router.get('/admin/users', authorizeAdmin, async (req, res) => {
     try {
         const users = await repo.find('users', {});
 
@@ -22,7 +22,7 @@ router.get('/admin/users', jwtAuthenticate, async (req, res) => {
     }
 });
 
-router.delete('/admin/users/:id', jwtAuthenticate, async (req, res) => {
+router.delete('/admin/users/:id', authorizeAdmin, async (req, res) => {
     try {
         repo.deleteOne('users', { id: req.params.id })
             .then(result => {
