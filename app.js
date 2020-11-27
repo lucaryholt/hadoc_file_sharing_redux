@@ -45,9 +45,33 @@ app.use(require('./routes/admin.js'));
 
 app.use(require('./routes/pages.js'));
 
+try {
+    const https = require('https');
+
+    const sslPort = Number(process.env.SSL_ACCESS_PORT);
+
+    const privateKey = fs.readFileSync(process.env.SSL_PRIVATE_KEY_PATH, 'utf-8');
+    const certificate = fs.readFileSync(process.env.SSL_CERTIFICATE_PATH, 'utf-8');
+
+    const credentials = { key: privateKey, cert: certificate };
+
+    const httpsServer = https.createServer(credentials, app);
+
+    httpsServer.listen(sslPort, (error) => {
+        if (error) console.log('Error starting HTTPS server.');
+        else console.log('HTTPS server started on port', sslPort);
+    });
+} catch (e) {
+    console.log('Could not start HTTPS server.');
+}
+
+const http = require('http');
+
 const port = Number(process.env.ACCESS_PORT);
 
-app.listen(port, (error) => {
-    if (error) console.log('Error starting server.');
-    else console.log('Server started on port', port);
+const httpServer = http.createServer(app);
+
+httpServer.listen(port, (error) => {
+    if (error) console.log('Error starting HTTP server.');
+    else console.log('HTTP server started on port', port);
 });
