@@ -1,5 +1,3 @@
-const hook = $('#upload-list-hook');
-
 function getUploads() {
     fetch('/restricted/uploads', {
         headers: {
@@ -10,6 +8,7 @@ function getUploads() {
             handleResponse(response, (response) => {
                 response.json()
                     .then(result => {
+                        const hook = $('#upload-list-hook');
                         hook.html('');
                         if (result.length !== 0) {
                             result.map(upload => {
@@ -44,7 +43,7 @@ function appendUpload(upload) {
                 '<a onclick="deleteUpload(\'' + upload.id + '\')" class="card-link text-danger">Delete</a>' +
             '</div>' +
         '</div><br>'
-    hook.append(html);
+    $('#upload-list-hook').append(html);
 }
 
 function deleteUpload(id) {

@@ -10,6 +10,10 @@ function modalAlert(message, alertId, intensity) {
         '</button>' +
         '</div>'
     );
+
+    setTimeout(() => {
+        hook.html('');
+    }, 3000);
 }
 
 function popUpAlert(message, intensity) {

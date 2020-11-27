@@ -42,6 +42,8 @@ function login() {
                             $('#user-page-button').html(sessionStorage.getItem('username'));
                             loggedOutButtons.hide();
                             loggedInButtons.show();
+                            document.getElementById('username-input').value = '';
+                            document.getElementById('password-input').value = '';
                         }, 1500);
                     });
             }, (error) => {
